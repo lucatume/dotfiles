@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+function travis-debug-job(){
+    echo "Starting Travis debug for build $1"
+
+    curl -s -X POST \
+        -H "Content-Type: application/json" \
+        -H "Accept: application/json" \
+        -H "Travis-API-Version: 3" \
+        -H "Authorization: token $(travis token)" \
+        -d '{ "quiet": true }' \
+        https://api.travis-ci.org/job/$1/debug
+}
+
+function travis-compile(){
+    ~/.travis/travis-build/bin/travis compile > build.sh
+}

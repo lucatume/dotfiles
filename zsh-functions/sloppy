@@ -1,0 +1,4 @@
+#! /usr/env/bin bash
+
+# Export the auth token
+export SLOPPY_APITOKEN=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imx1Y2FAdGhlYXZlcmFnZWRldi5jb20iLCJyZXZva2FibGUiOnRydWUsImlhdCI6MTU1NDE5NzAzNywiYXVkIjoiN0V3aWUwV3ZmNVRWTkY0QlhKNHpOR2ZPajRqRkpVckMifQ.tiq__sNSywgR5EFksiaxkWwXpOVXGCDtG3W5uFaSQow

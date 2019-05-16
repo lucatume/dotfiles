@@ -1,0 +1,36 @@
+[user]
+	email = luca@theaveragedev.com
+	name = theAverageDev (Luca Tumedei)
+[alias]
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    type = cat-file -t
+    dump = cat-file -p
+    suri = submodule update --recursive --init
+    wip = stash save --include-untracked
+    ph = push --set-upstream origin HEAD
+[core]
+    editor = vim
+	excludesfile = ~/.gitignore
+[push]
+	default = simple
+[mergetool]
+    keepBackup = true
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
+    ui = auto
+    pager = true
+[color "status"]
+    added = green
+    changed = red bold
+    untracked = magenta bold
+[color "branch"]
+    remote = yellow
+[color "diff"]
+    old = red bold

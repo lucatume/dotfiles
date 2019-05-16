@@ -1,0 +1,38 @@
+#! /usr/bin/env bash
+
+# Returns the path to the Local by Flywheel shell files appending a path.
+function local_ssh_entry(){
+    path=${1:-""}
+
+    echo ${HOME}/Library/Application\ Support/Local\ by\ Flywheel/ssh-entry/${path}
+}
+
+# Starts an SSH session in a specific machine, identified by its name.
+function local-ssh(){
+    if [ $# -lt 1 ]; then 
+        echo "Usage: local_ssh <site>"
+        echo ''
+        echo "Examples"
+        echo "--------"
+        echo ''
+        echo "Open a bash prompt in the project machine:"
+        echo "local ssh project"
+
+        return
+    fi
+
+    dir=$(local_ssh_entry)
+    file=$(ag ${1} ${dir} --files-with-matches)
+
+    if [ ${file} -z ];then 
+        echo "No Local site found for ${1}."
+        return
+    fi
+
+    sh ${file}
+}
+
+# Logs into the Local Docker machine.
+function local-machine(){
+    ssh -i ~/.docker/machine/machines/local-by-flywheel/id_rsa docker@192.168.92.100
+}

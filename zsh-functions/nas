@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+function nas_ssh(){
+    nas_ip="$(host tad-nas.synology.me | grep 'has address' | cut -d' ' -f4)"
+    ssh luca@${nas_ip}
+}

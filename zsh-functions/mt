@@ -1,0 +1,47 @@
+function mt-deep-clone(){
+    git clone moderntribe/$1 && (cd $1; git submodule update --recursive --init)
+}
+
+function sq1_global_start(){
+    (cd /Users/luca/Repos/square-one/dev/docker/global; sh ./start.sh)
+}
+
+function sq1_global_stop(){
+    (cd /Users/luca/Repos/square-one/dev/docker/global; sh ./stop.sh)
+}
+
+function loxi_start(){
+    sq1_global_start
+    (cd /Users/luca/Repos/calendar-saas/dev/docker; sh ./start.sh; sh ./start-queue-worker.sh)
+}
+
+function loxi_error_log(){
+    tail -f ~/Repos/calendar-saas/wp-content/debug.log
+}
+
+function loxi_start_and_build(){
+    loxi_start
+    loxi_build
+}
+
+function loxi_build(){
+    (cd /Users/luca/Repos/calendar-saas/dev/docker; sh ./build.sh)
+}
+
+function loxi_stop(){
+    (cd /Users/luca/Repos/calendar-saas/dev/docker; sh ./stop.sh)
+    sq1_global_stop
+}
+
+function loxi_restart(){
+    loxi_stop
+    loxi_start
+}
+
+function loxi_logs(){
+    (cd /Users/luca/Repos/calendar-saas/dev/docker; sh ./logs.sh)
+}
+
+function mt_sync_here(){
+    cd app/public/wp-content/plugins && mt sync $1
+}

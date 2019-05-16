@@ -1,0 +1,7 @@
+function docker-machine-start(){
+	docker-machine start default
+
+	echo "Setting up docker-machine environment variables..."
+	eval $(docker-machine env)
+	printenv | grep DOCKER
+}

@@ -1,0 +1,15 @@
+function vvv(){
+    cd ~/vagrant-local && vagrant up
+}
+
+function vshell(){
+    (cd ~/vagrant-local; vagrant ssh)
+}
+
+function vst(){
+    (cd ~/vagrant-local; vagrant status)
+}
+
+function vsion(){
+    (cd ~/vagrant-local; vagrant up --provision)
+}

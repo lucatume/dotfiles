@@ -1,0 +1,75 @@
+# returns the name of the push repo owneer, e.g. "lucatume"
+function git-find-owner(){
+    git remote show -n origin | grep Push | cut -d: -f3- | cut -d/ -f1
+}
+
+# returns the of the branch the current branch was forked from, e.g. "release/4.2.0"
+function git-find-parent (){
+    git show-branch -a \
+        | grep '\*' \
+        | grep -v `git rev-parse --abbrev-ref HEAD` \
+        | head -n1 \
+        | sed 's/.*\[\(.*\)\].*/\1/' \
+        | sed 's/[\^~].*//'
+}
+
+# opens a pull-request from the current branch to the closest parent branch on the origin
+# requires 'hub'
+function git-pr(){
+    git pull-request -b $(git-find-owner):$(git-find-parent) HEAD
+}
+
+# lists the git branch of each folder in the specified folder; if no folder is specified then
+# it will use the current working directory
+function git_branches(){
+    dir=${1:-$(pwd)}
+
+    if [[ -z "${dir}" ]]; then
+        echo "Usage: $FUNCNAME <dir>" >&2
+        return 1
+    fi
+
+    if [[ ! -d "${dir}" ]]; then
+        echo "Invalid dir specified: '${dir}'"
+        return 1
+    fi
+
+    # Subshell so we don't end up in a different dir than where we started.
+    (
+        cd "${dir}"
+        for sub in *; do
+            [[ -d "${sub}/.git" ]] || continue
+            echo "$sub [$(cd "$sub"; git  branch | grep '^\*' | cut -d' ' -f2)]"
+        done
+    )
+}
+
+# pulls the same branch, including submodules, for all git repositories in a folder, shallow
+function git_update(){
+    if [[ -z "$1" ]]; then
+        echo "Usage: $FUNCNAME <branch> <dir>" >&2
+        return 1
+    fi
+
+    dir=${2:-$(pwd)}
+
+    if [[ ! -d "${dir}" ]]; then
+        echo "Invalid dir specified: '${dir}'"
+        return 1
+    fi
+
+    # Subshell so we don't end up in a different dir than where we started.
+    (
+        cd "${dir}"
+        for sub in *; do
+            [[ -d "${sub}/.git" ]] || continue
+            echo "Updating $(basename -- ${sub})..."
+            (cd ${sub}; git checkout $1 && git submodule update --recursive --init)
+        done
+    )
+}
+
+# prints the last commit log
+gll(){
+    git log HEAD^..HEAD $@
+}

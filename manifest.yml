@@ -1,0 +1,26 @@
+# All units installed relative to the root.
+root: "~/"
+
+# Single files
+config_files:
+    
+    - src: setup-my-shell.sh
+      dst: setup-my-shell.sh
+
+symlinks:
+
+    - src: zshrc
+      dst: .zshrc
+
+    - src: ideavimrc
+      dst: .ideavimrc
+
+    - src: gitconfig
+      dst: .gitconfig
+
+    - src: gitignore
+      dst: .gitignore
+
+    - src: zsh-functions
+      dst: .zsh-functions
+

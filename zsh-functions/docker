@@ -1,0 +1,56 @@
+# stop all running containers
+function docker-stop-all() {
+	docker stop $(docker ps -q)
+}
+
+# removea all containers
+function docker-remove-all() {
+	docker rm $(docker ps -aq)
+}
+
+# stop and remove all running and stopped containers
+function docker-stop-and-remove-all() {
+	docker-stop-all && docker-remove-all
+}
+
+# ssh into a running container, a la `vagrant ssh`
+function docker-ssh() {
+	docker exec -it $1 /bin/bash
+}
+
+# remove all untagged images (usually temporary builds)
+function docker-rmi-dangling (){
+    docker rmi $(docker images -f dangling=true -q)
+}
+	
+# connect to the running database container using mysql
+function docker-mysql(){
+	mysql -h db.localhost -u root -proot 
+}
+
+# connect to the running database container using mycli
+function docker-mycli(){
+	mycli -h db.localhost -u root -p root 
+}
+
+# return the PHP version information for a docker-compose managed "php" container in the current folder
+function docker-php-version(){
+    docker-compose exec php php --version
+}
+
+# deactivate XDebug in a docker-compose managed Docker container in the current folder
+function docker-xoff(){
+    docker-compose exec php sh -c 'sed -i "/^zend_extension.*xdebug/ s/^zend_/;zend_/g" $(php --ini | grep xdebug.ini )'
+    docker-php-version
+}
+
+# activate XDebug in a docker-compose managed Docker container in the current folder
+function docker-xoff(){
+    docker-compose exec php sh -c 'sed -i "/^;zend_extension.*xdebug/ s/^;zend_/zend_/g" $(php --ini | grep xdebug.ini )'
+    docker-php-version
+}
+
+# Starts a Selenium standalone Chrome container listening on port 4444.
+function dch(){
+    docker run --rm -d -p 4444:4444 selenium/standalone-chrome
+}

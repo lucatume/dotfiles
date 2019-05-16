@@ -1,0 +1,3 @@
+function ssh-tad(){
+    ssh theavera@theaveragedev.com -p18765
+}

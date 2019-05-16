@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+alias -s {txt,yaml,yml,json,ical}=vim

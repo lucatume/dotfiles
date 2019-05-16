@@ -1,0 +1,6 @@
+# OS specific stuff
+.DS_Store
+
+# Codeception configuration files
+*.suite.yml
+.env.local

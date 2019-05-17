@@ -51,6 +51,16 @@ And my cross-system shell setup really.
 7. Depending on the machine either install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) or use [Docker Toolbox](https://docs.docker.com/toolbox/overview)
 8. Advanced zsh themes *might* require a Powerline font; install [Adobe Source Code Pro](https://github.com/powerline/fonts/blob/master/SourceCodePro/Source%20Code%20Pro%20Medium%20for%20Powerline.otf) if needed
 
+### Usefule one-liners
+
+Portable .vimrc file:
+```bash
+curl https://raw.githubusercontent.com/lucatume/dotfiles/master/portable-vimrc > ~/.vimrc
+```
+
+
 ## References
 * [Github does dotfiles](https://dotfiles.github.io/)
 * [Config Curator](https://github.com/razor-x/config_curator)
+
+

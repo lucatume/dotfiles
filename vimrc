@@ -60,11 +60,11 @@ call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
 call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
 
 " Auto-indent files.
-filetype indent on
+filetype on
 set smartindent
 
 " Define a list of files that will be auto-indented.
-autocmd BufRead,BufWritePre *.php normal gg=G
+" autocmd BufRead,BufWritePre *.yml normal gg=G
 
 " Set the tab width to 4 spaces.
 set tabstop=4

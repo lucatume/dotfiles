@@ -1,6 +1,9 @@
 " I've never used vi once in my life, before my time; it's ok to drop compatibility.
 set nocompatible
 
+" Disable swap files.
+set noswapfile
+
 " Enable syntax highlighting
 syntax enable
 

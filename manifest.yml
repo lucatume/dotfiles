@@ -2,12 +2,10 @@
 root: "~/"
 
 # Single files
-config_files:
-    
-    - src: setup-my-shell.sh
-      dst: setup-my-shell.sh
-
 symlinks:
+
+    - src: vimrc
+      dst: .vimrc
 
     - src: zshrc
       dst: .zshrc
@@ -23,4 +21,3 @@ symlinks:
 
     - src: zsh-functions
       dst: .zsh-functions
-

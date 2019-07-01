@@ -1,5 +1,4 @@
 My dotfiles.  
-And my cross-system shell setup really.
 
 ## Installing
 
@@ -21,10 +20,7 @@ And my cross-system shell setup really.
 5. Change directory to `dotfiles` and run Config Curator
     ```shell
     (cd dotfiles; curate -v)
-6. From the home folder run the setup script
-    ```shell
-    sh ./setup-my-shell.sh && rm setup-my-shell.sh
-7. Advanced zsh themes *might* require a Powerline font; install [Adobe Source Code Pro](https://github.com/powerline/fonts/blob/master/SourceCodePro/Source%20Code%20Pro%20Medium%20for%20Powerline.otf) if needed
+6. Advanced zsh themes *might* require a Powerline font; install [Adobe Source Code Pro](https://github.com/powerline/fonts/blob/master/SourceCodePro/Source%20Code%20Pro%20Medium%20for%20Powerline.otf) if needed
 
 ### MacOs
 
@@ -45,11 +41,8 @@ And my cross-system shell setup really.
 5. Change directory to `dotfiles` and run Config Curator
     ```shell
     (cd dotfiles; curate -v)
-6. From the home folder run the setup script
-    ```shell
-    sh ./setup-my-shell.sh && rm setup-my-shell.sh
-7. Depending on the machine either install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) or use [Docker Toolbox](https://docs.docker.com/toolbox/overview)
-8. Advanced zsh themes *might* require a Powerline font; install [Adobe Source Code Pro](https://github.com/powerline/fonts/blob/master/SourceCodePro/Source%20Code%20Pro%20Medium%20for%20Powerline.otf) if needed
+6. Depending on the machine either install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) or use [Docker Toolbox](https://docs.docker.com/toolbox/overview)
+7. Advanced zsh themes *might* require a Powerline font; install [Adobe Source Code Pro](https://github.com/powerline/fonts/blob/master/SourceCodePro/Source%20Code%20Pro%20Medium%20for%20Powerline.otf) if needed
 
 ### Usefule one-liners
 

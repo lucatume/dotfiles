@@ -16,7 +16,7 @@ function local-ssh(){
         echo "--------"
         echo ''
         echo "Open a bash prompt in the project machine:"
-        echo "local ssh project"
+        echo "local ssh <project>"
 
         return
     fi

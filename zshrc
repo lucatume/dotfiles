@@ -180,7 +180,7 @@ for bin in "${binFuncs[@]}"; do
     fi
 done
 
-funcFiles=( "tad" "utils" "codeception" "nas" "local" "aliases" )
+funcFiles=( "tad" "utils" "codeception" "nas" "local" "aliases" "project" )
 for funcFile in "${funcFiles[@]}"; do
     if [ -f ~/.zsh-functions/${funcFile} ]; then
         source ~/.zsh-functions/${funcFile}

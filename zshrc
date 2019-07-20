@@ -4,18 +4,21 @@
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
+# Source the Powerlevel9k theme 
+# (see https://github.com/bhilburn/powerlevel9k/wiki/Install-Instructions#step-1-install-powerlevel9k)
+source /usr/local/opt/powerlevel9k/powerlevel9k.zsh-theme
+
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# POWERLEVEL9K_DISABLE_RPROMPT=true
-# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
-# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(php_version)
-# POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
-# POWERLEVEL9K_SHORTEN_STRATEGY=truncate_with_package_name
+POWERLEVEL9K_DISABLE_RPROMPT=true
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
+POWERLEVEL9K_SHORTEN_STRATEGY=truncate_with_package_name
 # use with light themes
-# POWERLEVEL9K_COLOR_SCHEME='light'
-# ZSH_THEME="powerlevel9k/powerlevel9k"
-ZSH_THEME="cobalt2"
+POWERLEVEL9K_COLOR_SCHEME='light'
+ZSH_THEME="powerlevel9k/powerlevel9k"
+# ZSH_THEME="agnoster"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"

@@ -4,15 +4,18 @@
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
-# Source the Powerlevel9k theme 
+# Theme
+# =====
+# Install powerlevel9k: git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
 # (see https://github.com/bhilburn/powerlevel9k/wiki/Install-Instructions#step-1-install-powerlevel9k)
+ZSH_THEME="powerlevel9k/powerlevel9k"
+# These settings apply to the powerlevel9k zsh theme.
 POWERLEVEL9K_DISABLE_RPROMPT=true
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
 POWERLEVEL9K_SHORTEN_STRATEGY=truncate_with_package_name
-# use with light themes
+# Use with light themes.
 POWERLEVEL9K_COLOR_SCHEME='light'
-ZSH_THEME="powerlevel9k/powerlevel9k"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -53,49 +56,40 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Paths
-# -----
-
-# bins - look around for different setups
+# =====
+# Binaries - look around for different setups.
+# Register them here to dynamically load them from the ~/.zsh-functions files.
 binPaths=(
-"/home/linuxbrew/.linuxbrew/bin" # Linuxbrew default installation 
-"$HOME/.linuxbrew/bin" # Linuxbrew alt installation path
-"/usr/local/bin" # homebrew on MacOs
-"$HOME/.config/composer/vendor/bin" # global Composer bins
-"/usr/lib/go-1.8/bin" # Go language bins
-"$HOME/Repos/tribe-product-utils" # Modern Tribe Products utils
-"node_modules/.bin" # local Node binaries
+"." # The current folder.
+"vendor/bin" # Local Composer binaries.
+"node_modules/.bin" # Local Node binaries.
+"/usr/local/bin" # homebrew on MacOs.
+"$HOME/.composer/vendor/bin" # Global Composer binaries.
+"/home/linuxbrew/.linuxbrew/bin" # Linuxbrew default installation.
+"$HOME/.linuxbrew/bin" # Linuxbrew alt installation path.
+"/usr/lib/go-1.8/bin" # Go language binaries.
+"$HOME/Repos/tribe-product-utils" # Modern Tribe Products utils.
 )
-for binPath in $binPaths; do
-    if [ -d $binPath ]; then
+for binPath in ${binPaths}; do
+    if [ -d ${binPath} ]; then
         export PATH="$binPath:$PATH"
     fi
 done
 
-# If using Homebrew use its 'ruby' bins to avoid having to use 'sudo' to install gems
-if type "brew --prefix ruby" > /dev/null; then
-    export PATH=$(brew --prefix ruby)/bin:$PATH
-fi
+# If using Homebrew use its binaries for the following languages.
+homebrewLangs=( "ruby" "python" )
+for homebrewLang in ${homebrewLangs}; do
+	if type "brew --prefix ${homebrewLang}" > /dev/null; then
+		export PATH=$(brew --prefix ruby)/bin:$PATH
+		# Set the PYTHONPATH correctly.
+		if "${homebrewLang}" == "python"; then
+			export PATH="/usr/local/opt/python/libexec/bin:$PATH"
+		fi
+	fi
+done
 
-# If using Homebrew set the PYTHONPATH correctly
-if type "brew" > /dev/null; then
-    # export PYTHONPATH=$(brew --prefix)/lib/python2.7/site-packages:$PYTHONPATH
-    export PATH="/usr/local/opt/python/libexec/bin:$PATH"
-fi
-
-# goss and dgoss (https://github.com/aelsabbahy/goss/tree/master/extras/dgoss)
-export GOSS_PATH=~/src/goss-linux-amd64
-
-# Composer global bins
-export PATH=~/.composer/vendor/bin:$PATH
-
-# project local bins (e.g. installed via Composer)
-export PATH="vendor/bin:$PATH"
-
-# current folder bins
-export PATH=".:$PATH"
-
-# ZSH completions
-# ---------------
+# ZSH and bash completions
+# ========================
 completionPaths=(
     "/usr/local/share/zsh/site-functions"
     "/usr/local/share/zsh-completions"
@@ -107,9 +101,17 @@ for completionPath in $completionPaths; do
         fpath=($completionPath $fpath)
     fi
 done
+
+# Reload zsh and bash completions.
 autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
+# Source the zsh-completions plugin directly.
+if [ -d /usr/local/share/zsh-completions ]; then
+	source /usr/local/share/zsh-completions
+fi
+
+# Source bash completion scripts.
 bashCompletionScripts="/usr/local/etc/bash_completion.d"
 if [ -d "$bashCompletionScripts" ]; then
     for bashCompletionScript in $bashCompletionScripts/*; do
@@ -125,7 +127,7 @@ fi
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z zsh-completions docker docker-compose)
+plugins=(git z docker docker-compose)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -137,11 +139,11 @@ source $ZSH/oh-my-zsh.sh
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+	export EDITOR='vim'
+else
+	export EDITOR='vim'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -167,16 +169,18 @@ alias kk="clear"
 # alias 'hub' to 'git'
 eval "$(hub alias -s)"
 
-# Functions
-# ---------
+# Function files
+# ==============
 
-binFuncs=( "docker" "docker-machine" "git" "zsh" "travis" "mt" "sloppy" )
+# Load a set of function files; each one will be loaded if the corresponding binary is present.
+binFuncs=( "docker" "docker-machine" "git" "zsh" "travis" "mt" )
 for bin in "${binFuncs[@]}"; do
     if type "$bin" > /dev/null; then
         source ~/.zsh-functions/$bin
     fi
 done
 
+# Load a set of function files not related to specific binaries.
 funcFiles=( "tad" "utils" "codeception" "nas" "local" "aliases" "project" "utils" "vvv" "php" )
 for funcFile in "${funcFiles[@]}"; do
     if [ -f ~/.zsh-functions/${funcFile} ]; then
@@ -184,48 +188,22 @@ for funcFile in "${funcFiles[@]}"; do
     fi
 done
 
-# Deactivates XDebug on the local PHP binary
-function xoff() {
-    # sed -i '' '/^zend_extension.*xdebug.so/ s/zend_ex/;zend_ex/g' $(sed 's/,*$//g' <<< $(php --ini | grep xdebug.ini))
-	file=$(php --ini | grep xdebug.ini | grep -o '[^ ]*$')
-    sed -i '' '/^zend_extension.*xdebug.so/ s/zend_ex/;zend_ex/g' ${file}
-}
-
-# Activates XDebug on the local PHP binary
-function xon() {
-    # sed -i '' '/^;zend_extension.*xdebug.so/ s/;zend_ex/zend_ex/g' $(sed 's/,*$//g' <<< $(php --ini | grep xdebug.ini))
-	file=$(php --ini | grep xdebug.ini | grep -o '[^ ]*$')
-    sed -i '' '/^;zend_extension.*xdebug.so/ s/;zend_ex/zend_ex/g' ${file}
-}
-
-# SSH keys
-# --------
-# Add the SSH keys to the ssh-agent
-# if [ -d "$HOME/.ssh" ]; then
-    # eval "$(ssh-agent -s)"
-    # for f in $HOME/.ssh/*; do
-        # if [[ $f =~ "^.*\/known_hosts$" ]]; then
-            # continue;
-        # fi
-        # if [[ $f =~ "^.*\.pub$" ]]; then
-            # continue;
-        # fi
-
-        # ssh-add $f
-    # done
-# fi
-
 # Start nodenv and append its path before the other ones.
+# This command is not fenced into a if-then check as I want an error thrown if not installed.
 eval "$(nodenv init -)"
 export PATH=~/.nodenv/shims:$PATH
 
-# phpenv
-export PATH="$HOME/.phpenv/bin:$PATH"
+# Start phpenv and append its path before the other ones.
+# This command is not fenced into a if-then check as I want an error thrown if not installed.
 eval "$(phpenv init -)"
+export PATH="$HOME/.phpenv/bin:$PATH"
 
-# Add the node_module/.bin folder to the PATH.
-export PATH=node_modules/.bin:$PATH
+# Mac built-in bison version might not be able to compile PHP.
+# Load the homebrew one if available.
+if [ -d /usr/local/opt/bison/bin ]; then
+	export PATH="/usr/local/opt/bison/bin:$PATH"
+fi
 
-# Deduplicate the $PATH entries
+# Deduplicate the $PATH entries.
 export PATH=$(echo -n $PATH | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
 

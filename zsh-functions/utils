@@ -1,41 +1,11 @@
-# Report the n most changed files in the project; n defaults to 10.
-function git-most-changed(){
-    if [[ "$1" != "" ]]; then
-        N="$1"
-    else
-        N=10
-    fi
-
-    if [[ "$2" != "" ]]; then
-        PATTERN="$2"
-    else
-        PATTERN=".*"
-    fi
-
-    echo "Usage: \e[32mgit-most-changed [<num_files>] [<pattern>]\e[0m"
-    echo "  \e[32m<num_files>\e[0m The number of files to show"
-    echo "  \e[32m<pattern>\e[0m   The \e[32mgrep\e[0m pattern to use to filter the files; defaults to \e[32m.*\e[0m to show all files.\n"
-    echo
-    echo "Example: \e[32mgit-most-changed 10 '^src.*\.php' \e[0m to get the 10 most changed PHP files in the /src folder."
-    echo
-    echo "Parsing files, could take a while..."
-    echo
-
-    git ls-files |
-    grep ${PATTERN} |
-    while read aa
-    do
-      printf . >&2
-      set $(git log --follow --oneline "$aa" | wc)
-      printf '%s\t%s\n' $1 "$aa"
-    done > bb
-
-    echo
-    echo
-    echo "Here are the \e[1m$n most changed\e[0m files in this folder (descending order):"
-    echo "=================================================="
-
-    sort -nr bb | head -$N
-
-    rm bb
+# Download and execute a bash script.
+function rex(){
+	sourceScriptUrl=$1
+	if [ ! ${sourceScriptUrl} ]; then
+		echo "You must specify the URL of the script to execute"
+		echo "Example:"
+		echo "	rex https://gist.githubusercontent.com/user/hash/raw/hash-2/script.sh"
+		exit 1
+	fi
+	curl -L ${sourceScriptUrl} | bash
 }

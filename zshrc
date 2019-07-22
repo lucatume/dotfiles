@@ -91,42 +91,22 @@ done
 
 # ZSH and bash completions
 # ========================
-completionPaths=(
-    "/usr/local/share/zsh/site-functions"
-    "/usr/local/share/zsh-completions"
-    "$HOME/.oh-my-zsh/custom/plugins/zsh-completions/src",
-    
-)
-for completionPath in $completionPaths; do
-    if [ -d "$completionPath" ]; then
-        fpath=($completionPath $fpath)
-    fi
-done
-
-# Reload zsh and bash completions.
-autoload -U +X compinit && compinit
-autoload -U +X bashcompinit && bashcompinit
-
-# Source the zsh-completions plugin directly.
-if [ -d /usr/local/share/zsh-completions ]; then
-	source /usr/local/share/zsh-completions
-fi
-
-# Source bash completion scripts.
-bashCompletionScripts="/usr/local/etc/bash_completion.d"
-if [ -d "$bashCompletionScripts" ]; then
-    for bashCompletionScript in ${bashCompletionScripts}/*.sh; do
-		source "$bashCompletionScript"
-    done
+# If brew is installed then load the shell completions.
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 fi
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z docker docker-compose)
+plugins=(git z docker docker-compose )
 
+# Load oh-my-zsh.
 source $ZSH/oh-my-zsh.sh
+
+# Reload completions after oh-my-zsh loaded.
+compinit
 
 # User configuration
 
@@ -146,7 +126,7 @@ fi
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
+export SSH_KEY_PATH="~/.ssh/id_rsa"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -157,13 +137,13 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# reload zsh config file
+# Reload zsh config file.
 alias zsource="source ~/.zshrc"
-
-#clear the screen
+# Edit this file.
+alias zvim="vim ~/.zshrc"
+# Clear the screen/
 alias kk="clear"
-
-# alias 'hub' to 'git'
+# Alias 'hub' to 'git'.
 eval "$(hub alias -s)"
 
 # Function files

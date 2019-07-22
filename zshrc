@@ -115,12 +115,8 @@ fi
 # Source bash completion scripts.
 bashCompletionScripts="/usr/local/etc/bash_completion.d"
 if [ -d "$bashCompletionScripts" ]; then
-    for bashCompletionScript in $bashCompletionScripts/*; do
-        if [ "$bashCompletionScripts/hub.bash_completion.sh" != "$bashCompletionScript" ]; then
-            if [ -f $bashCompletionScripts ]; then
-                source "$bashCompletionScript"
-            fi
-        fi
+    for bashCompletionScript in ${bashCompletionScripts}/*.sh; do
+		source "$bashCompletionScript"
     done
 fi
 

@@ -190,13 +190,13 @@ done
 
 # Start nodenv and append its path before the other ones.
 # This command is not fenced into a if-then check as I want an error thrown if not installed.
-eval "$(nodenv init -)"
 export PATH=~/.nodenv/shims:$PATH
+eval "$(nodenv init -)"
 
 # Start phpenv and append its path before the other ones.
 # This command is not fenced into a if-then check as I want an error thrown if not installed.
-eval "$(phpenv init -)"
 export PATH="$HOME/.phpenv/bin:$PATH"
+eval "$(phpenv init -)"
 
 # Mac built-in bison version might not be able to compile PHP.
 # Load the homebrew one if available.

@@ -12,8 +12,9 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # These settings apply to the powerlevel9k zsh theme.
 POWERLEVEL9K_DISABLE_RPROMPT=true
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
-POWERLEVEL9K_SHORTEN_STRATEGY=truncate_with_package_name
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
+# See https://github.com/Powerlevel9k/powerlevel9k#dir
+POWERLEVEL9K_SHORTEN_STRATEGY=default
 # Use with light themes.
 POWERLEVEL9K_COLOR_SCHEME='light'
 

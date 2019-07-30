@@ -61,9 +61,6 @@ POWERLEVEL9K_COLOR_SCHEME='light'
 # Binaries - look around for different setups.
 # Register them here to dynamically load them from the ~/.zsh-functions files.
 binPaths=(
-"." # The current folder.
-"vendor/bin" # Local Composer binaries.
-"node_modules/.bin" # Local Node binaries.
 "/usr/local/bin" # homebrew on MacOs.
 "$HOME/.composer/vendor/bin" # Global Composer binaries.
 "/home/linuxbrew/.linuxbrew/bin" # Linuxbrew default installation.
@@ -75,6 +72,16 @@ for binPath in ${binPaths}; do
     if [ -d ${binPath} ]; then
         export PATH="$binPath:$PATH"
     fi
+done
+
+# Add the relative paths.
+relativeBinPaths=(
+	"." # The current folder.
+	"vendor/bin" # Local Composer binaries.
+	"node_modules/.bin" # Local Node binaries.
+)
+for binPath in ${relativeBinPaths}; do
+	export PATH="$binPath:$PATH"
 done
 
 # If using Homebrew use its binaries for the following languages.
@@ -184,3 +191,6 @@ fi
 # Deduplicate the $PATH entries.
 export PATH=$(echo -n $PATH | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
 
+
+# added by travis gem
+[ -f /Users/lucatume/.travis/travis.sh ] && source /Users/lucatume/.travis/travis.sh

@@ -9,3 +9,12 @@ function rex(){
 	fi
 	curl -L ${sourceScriptUrl} | bash
 }
+
+# Open a file in Marked 2.
+function marked(){
+	if [ $1 ]; then
+    	open -a "Marked 2" $1;
+	else
+    	open -a "Marked 2";
+	fi
+}

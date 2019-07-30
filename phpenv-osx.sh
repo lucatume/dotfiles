@@ -1,41 +1,6 @@
 #!/usr/bin/env bash
 # vim: ai ts=2 sw=2 et sts=2 ft=sh
 
-# Install or re-install phpenv with
-# multiple versions of PHP on macOS.
-#
-# Usage:
-#
-#   curl -L https://git.io/v52yY | bash
-#
-
-# Bash strict mode.
-set -o pipefail
-set -o errexit
-set -o nounset
-
-# Allow empty globs.
-shopt -s nullglob
-
-IFS=$' '
-
-# Check OS.
-if [[ "${OSTYPE//[0-9.]/}" != "darwin" ]]; then
-  (>&2 echo "Error: This script is for macOS not '${OSTYPE}'.")
-  exit 1;
-fi
-
-brew_install() {
-  # Install homebrew.
-  if ! command -v brew 1>/dev/null; then
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  fi
-
-  # Update everything.
-  brew update
-  brew upgrade
-}
-
 php_install() {
   local PHP_VER;
   local PHP_EXT;
@@ -115,9 +80,10 @@ phpenv_versions_rehash() {
   phpenv rehash
 }
 
-# brew_install
-php_install
-# phpenv_install
-phpenv_versions_cleanup
-phpenv_versions_rehash
+phpenv_brew_install(){
+  php_install
+  phpenv_install
+  phpenv_versions_cleanup
+  phpenv_versions_rehash
+}
 

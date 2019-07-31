@@ -50,12 +50,4 @@ let g:netrw_liststyle=3
 let g:netrw_browse_split = 4
 " Set the horizontal size of the netrw tree explorer.
 let g:netrw_winsize = 25
-"
-" ---------------------------------------
-" Plugins mapping - same order as plugins
-" ---------------------------------------
-
-" ---------------------------------------------------
-" Plugins - copy and pasted for portability purposes.
-" ---------------------------------------------------
 

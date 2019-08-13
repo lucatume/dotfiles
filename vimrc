@@ -51,3 +51,5 @@ let g:netrw_browse_split = 4
 " Set the horizontal size of the netrw tree explorer.
 let g:netrw_winsize = 25
 
+" GUI settings
+set guifont=Monaco:16

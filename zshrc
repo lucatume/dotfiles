@@ -107,7 +107,7 @@ fi
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z docker docker-compose )
+plugins=(git z docker docker-compose git-it-on )
 
 # Load oh-my-zsh.
 source $ZSH/oh-my-zsh.sh
@@ -148,7 +148,7 @@ export SSH_KEY_PATH="~/.ssh/id_rsa"
 alias zsource="source ~/.zshrc"
 # Edit this file.
 alias zvim="vim ~/.zshrc"
-# Clear the screen/
+# Clear the screen.
 alias kk="clear"
 # Alias 'hub' to 'git'.
 eval "$(hub alias -s)"
@@ -191,6 +191,10 @@ fi
 # Deduplicate the $PATH entries.
 export PATH=$(echo -n $PATH | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
 
+# vi mode for the cli.
+bindkey -v
+# Kill the timeout for keys.
+export KEYTIMEOUT=1
 
 # added by travis gem
 [ -f /Users/lucatume/.travis/travis.sh ] && source /Users/lucatume/.travis/travis.sh

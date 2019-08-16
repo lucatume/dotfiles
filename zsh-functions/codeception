@@ -1,9 +1,14 @@
-# run Codeception from the vendor/bin folder.
-function cr(){
-    vendor/bin/codecept run $@;
+# Run the base Codeception command.
+function c(){
+		vendor/bin/codecept $@
 }
 
-# build Codeception suites
+# Run Codeception from the vendor/bin folder.
+function cr(){
+		vendor/bin/codecept run $@;
+}
+
+# Build Codeception suites.
 cb(){
-    vendor/bin/codecept build $@
+		vendor/bin/codecept build $@
 }

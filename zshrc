@@ -196,9 +196,14 @@ bindkey -v
 # Kill the timeout for keys.
 export KEYTIMEOUT=1
 
-# if nnn is installed then open all files in $EDITOR
+# if nnn is installed then open all files in $EDITOR.
 # https://github.com/jarun/nnn
 export NNN_USE_EDITOR=1
+	
+# If googler is installed, then alias it to "g".
+if type googler &>/dev/null; then
+  alias g="googler -l en -c com"
+fi
 
 # added by travis gem
 [ -f /Users/lucatume/.travis/travis.sh ] && source /Users/lucatume/.travis/travis.sh

@@ -196,5 +196,9 @@ bindkey -v
 # Kill the timeout for keys.
 export KEYTIMEOUT=1
 
+# if nnn is installed then open all files in $EDITOR
+# https://github.com/jarun/nnn
+export NNN_USE_EDITOR=1
+
 # added by travis gem
 [ -f /Users/lucatume/.travis/travis.sh ] && source /Users/lucatume/.travis/travis.sh

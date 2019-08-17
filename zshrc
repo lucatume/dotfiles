@@ -188,6 +188,11 @@ if [ -d /usr/local/opt/bison/bin ]; then
 	export PATH="/usr/local/opt/bison/bin:$PATH"
 fi
 
+# If Homebrew gnubin director exists, then prepend it to the path.
+if [ -d /usr/local/opt/make/libexec/gnubin ]; then
+    PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
+fi
+
 # Deduplicate the $PATH entries.
 export PATH=$(echo -n $PATH | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
 

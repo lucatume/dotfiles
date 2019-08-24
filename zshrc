@@ -107,8 +107,13 @@ fi
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z docker docker-compose git-it-on )
+plugins=(git z docker docker-compose )
 
+# If the git-it-on plugin is installed, then activate it.
+# See: https://github.com/peterhurford/git-it-on.zsh
+if [ -d ${HOME}/.oh-my-zsh/custom/plugin/git-it-on ]; then
+	plugins+=(git-it-on)
+fi
 # Load oh-my-zsh.
 source $ZSH/oh-my-zsh.sh
 
@@ -159,7 +164,7 @@ eval "$(hub alias -s)"
 # Load a set of function files; each one will be loaded if the corresponding binary is present.
 binFuncs=( "docker" "docker-machine" "git" "zsh" "travis" "mt" )
 for bin in "${binFuncs[@]}"; do
-    if type "$bin" > /dev/null; then
+    if  [ type "$bin" >/dev/null 2>&1 ]; then
         source ~/.zsh-functions/$bin
     fi
 done
@@ -172,15 +177,19 @@ for funcFile in "${funcFiles[@]}"; do
     fi
 done
 
-# Start nodenv and append its path before the other ones.
-# This command is not fenced into a if-then check as I want an error thrown if not installed.
-export PATH=~/.nodenv/shims:$PATH
-eval "$(nodenv init -)"
+if [ type nodenv >/dev/null 2>&1 ]; then
+	# Start nodenv and append its path before the other ones.
+	# This command is not fenced into a if-then check as I want an error thrown if not installed.
+	export PATH=~/.nodenv/shims:$PATH
+	eval "$(nodenv init -)"
+fi
 
-# Start phpenv and append its path before the other ones.
-# This command is not fenced into a if-then check as I want an error thrown if not installed.
-export PATH="$HOME/.phpenv/bin:$PATH"
-eval "$(phpenv init -)"
+if [ type nodenv >/dev/null 2>&1 ]; then
+	# Start phpenv and append its path before the other ones.
+	# This command is not fenced into a if-then check as I want an error thrown if not installed.
+	export PATH="$HOME/.phpenv/bin:$PATH"
+	eval "$(phpenv init -)"
+fi
 
 # Mac built-in bison version might not be able to compile PHP.
 # Load the homebrew one if available.

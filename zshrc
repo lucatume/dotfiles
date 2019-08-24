@@ -202,9 +202,6 @@ if [ -d /usr/local/opt/make/libexec/gnubin ]; then
     PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
 fi
 
-# Deduplicate the $PATH entries.
-export PATH=$(echo -n $PATH | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
-
 # vi mode for the cli.
 bindkey -v
 # Kill the timeout for keys.
@@ -219,5 +216,9 @@ if type googler &>/dev/null; then
   alias g="googler -l en -c com"
 fi
 
-# added by travis gem
+# Added by travis gem.	
 [ -f /Users/lucatume/.travis/travis.sh ] && source /Users/lucatume/.travis/travis.sh
+
+# Deduplicate the $PATH entries.
+DEDUPED_PATH=$(n= IFS=':'; for e in $PATH; do [[ :$n == *:$e:* ]] || n+=$e:; done; echo "${n:0: -1}")
+export PATH=$DEDUPED_PATH

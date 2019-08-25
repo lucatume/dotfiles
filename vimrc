@@ -72,6 +72,7 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		Plugin 'vim-airline/vim-airline-themes'
 		Plugin 'arcticicestudio/nord-vim'
 		Plugin 'ericbn/vim-solarized'
+		Plugin 'gertjanreynaert/cobalt2-vim-theme'
 
 		" All of your Plugins must be added before the following line
 		call vundle#end()            " required
@@ -93,7 +94,7 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		"
 		" Or the solarized one.
 		" https://github.com/ericbn/vim-solarized
-		colorscheme solarized
-		set background=light
+		colorscheme cobalt2
+		set background=dark
 		set termguicolors
 endif

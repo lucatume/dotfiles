@@ -62,7 +62,8 @@ POWERLEVEL9K_COLOR_SCHEME='light'
 # Register them here to dynamically load them from the ~/.zsh-functions files.
 binPaths=(
 "/usr/local/bin" # homebrew on MacOs.
-"$HOME/.composer/vendor/bin" # Global Composer binaries.
+"$HOME/.composer/vendor/bin" # Global Composer binaries on Mac OS.
+"$HOME/.config/composer/vendor/bin" # Global Composer binaries on Linux.
 "/home/linuxbrew/.linuxbrew/bin" # Linuxbrew default installation.
 "$HOME/.linuxbrew/bin" # Linuxbrew alt installation path.
 "/usr/lib/go-1.8/bin" # Go language binaries.
@@ -222,3 +223,7 @@ fi
 # Deduplicate the $PATH entries.
 DEDUPED_PATH=$(n= IFS=':'; for e in $PATH; do [[ :$n == *:$e:* ]] || n+=$e:; done; echo "${n:0: -1}")
 export PATH=$DEDUPED_PATH
+
+# Activate linuxbrew if installed.
+test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
+test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)

@@ -16,7 +16,7 @@ POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 # See https://github.com/Powerlevel9k/powerlevel9k#dir
 POWERLEVEL9K_SHORTEN_STRATEGY=default
 # Use with light themes.
-POWERLEVEL9K_COLOR_SCHEME='light'
+POWERLEVEL9K_COLOR_SCHEME='dark'
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -210,5 +210,10 @@ if type googler &>/dev/null; then
   alias g="googler -l en -c com"
 fi
 
-# added by travis gem
+# If exa is installed, then alias it to "ls".
+if type exa &>/dev/null; then
+  alias ls="exa"
+fi
+
+# Added by travis gem.
 [ -f /Users/lucatume/.travis/travis.sh ] && source /Users/lucatume/.travis/travis.sh

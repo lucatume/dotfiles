@@ -4,8 +4,11 @@ set nocompatible
 " Disable swap files.
 set noswapfile
 
-" Enable syntax highlighting
+" Enable syntax highlighting.
 syntax enable
+
+" Allow backspacing over auto-indent, end-of-line and to the start of insert.
+set backspace=indent,eol,start
 
 " Enable the built-in filetype plugin.
 filetype plugin on
@@ -72,6 +75,8 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		Plugin 'vim-airline/vim-airline-themes'
 		Plugin 'arcticicestudio/nord-vim'
 		Plugin 'ericbn/vim-solarized'
+		Plugin 'lifepillar/vim-solarized8'
+		Plugin 'herrbischoff/cobalt2.vim'
 
 		" All of your Plugins must be added before the following line
 		call vundle#end()            " required
@@ -93,7 +98,7 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		"
 		" Or the solarized one.
 		" https://github.com/ericbn/vim-solarized
-		colorscheme solarized
-		set background=light
+		colorscheme cobalt2
+		set background=dark
 		set termguicolors
 endif

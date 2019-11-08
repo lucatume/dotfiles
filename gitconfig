@@ -11,7 +11,8 @@
     dump = cat-file -p
     suri = submodule update --recursive --init
     wip = stash save --include-untracked
-    ph = push --set-upstream origin HEAD
+	ph = push --set-upstream origin HEAD
+	bb = rev-parse --abbrev-ref HEAD
 [core]
     editor = vim
 	excludesfile = ~/.gitignore

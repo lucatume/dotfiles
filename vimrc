@@ -77,6 +77,7 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		Plugin 'ericbn/vim-solarized'
 		Plugin 'lifepillar/vim-solarized8'
 		Plugin 'herrbischoff/cobalt2.vim'
+		Plugin 'gertjanreynaert/cobalt2-vim-theme'
 
 		" All of your Plugins must be added before the following line
 		call vundle#end()            " required

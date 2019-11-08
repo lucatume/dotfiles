@@ -62,7 +62,8 @@ POWERLEVEL9K_COLOR_SCHEME='dark'
 # Register them here to dynamically load them from the ~/.zsh-functions files.
 binPaths=(
 "/usr/local/bin" # homebrew on MacOs.
-"$HOME/.composer/vendor/bin" # Global Composer binaries.
+"$HOME/.composer/vendor/bin" # Global Composer binaries on Mac OS.
+"$HOME/.config/composer/vendor/bin" # Global Composer binaries on Linux.
 "/home/linuxbrew/.linuxbrew/bin" # Linuxbrew default installation.
 "$HOME/.linuxbrew/bin" # Linuxbrew alt installation path.
 "/usr/lib/go-1.8/bin" # Go language binaries.
@@ -107,8 +108,13 @@ fi
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z docker docker-compose git-it-on )
+plugins=(git z docker docker-compose )
 
+# If the git-it-on plugin is installed, then activate it.
+# See: https://github.com/peterhurford/git-it-on.zsh
+if [ -d ${HOME}/.oh-my-zsh/custom/plugin/git-it-on ]; then
+	plugins+=(git-it-on)
+fi
 # Load oh-my-zsh.
 source $ZSH/oh-my-zsh.sh
 
@@ -159,7 +165,7 @@ eval "$(hub alias -s)"
 # Load a set of function files; each one will be loaded if the corresponding binary is present.
 binFuncs=( "docker" "docker-machine" "git" "zsh" "travis" "mt" )
 for bin in "${binFuncs[@]}"; do
-    if type "$bin" > /dev/null; then
+    if  [ type "$bin" >/dev/null 2>&1 ]; then
         source ~/.zsh-functions/$bin
     fi
 done
@@ -172,15 +178,19 @@ for funcFile in "${funcFiles[@]}"; do
     fi
 done
 
-# Start nodenv and append its path before the other ones.
-# This command is not fenced into a if-then check as I want an error thrown if not installed.
-export PATH=~/.nodenv/shims:$PATH
-eval "$(nodenv init -)"
+if [ type nodenv >/dev/null 2>&1 ]; then
+	# Start nodenv and append its path before the other ones.
+	# This command is not fenced into a if-then check as I want an error thrown if not installed.
+	export PATH=~/.nodenv/shims:$PATH
+	eval "$(nodenv init -)"
+fi
 
-# Start phpenv and append its path before the other ones.
-# This command is not fenced into a if-then check as I want an error thrown if not installed.
-export PATH="$HOME/.phpenv/bin:$PATH"
-eval "$(phpenv init -)"
+if [ type nodenv >/dev/null 2>&1 ]; then
+	# Start phpenv and append its path before the other ones.
+	# This command is not fenced into a if-then check as I want an error thrown if not installed.
+	export PATH="$HOME/.phpenv/bin:$PATH"
+	eval "$(phpenv init -)"
+fi
 
 # Mac built-in bison version might not be able to compile PHP.
 # Load the homebrew one if available.
@@ -192,9 +202,6 @@ fi
 if [ -d /usr/local/opt/make/libexec/gnubin ]; then
     PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
 fi
-
-# Deduplicate the $PATH entries.
-export PATH=$(echo -n $PATH | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
 
 # vi mode for the cli.
 bindkey -v
@@ -217,3 +224,11 @@ fi
 
 # Added by travis gem.
 [ -f /Users/lucatume/.travis/travis.sh ] && source /Users/lucatume/.travis/travis.sh
+
+# Deduplicate the $PATH entries.
+DEDUPED_PATH=$(n= IFS=':'; for e in $PATH; do [[ :$n == *:$e:* ]] || n+=$e:; done; echo "${n:0: -1}")
+export PATH=$DEDUPED_PATH
+
+# Activate linuxbrew if installed.
+test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
+test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)

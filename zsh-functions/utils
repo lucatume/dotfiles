@@ -230,7 +230,7 @@ function repo-sync(){
 		else
 				echo "$(green)Starting watch...$(nocolor)"
 				sleep 1
-				watch -cd "rsync -aE '${source}' '${dest}'"
+				watch -cd "rsync -aE '${source}' '${dest}'; tree -L 2 -C '${dest}'"
 		fi 
 
 		return $?

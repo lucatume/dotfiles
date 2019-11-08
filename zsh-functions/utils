@@ -135,23 +135,36 @@ function repo-link(){
 
 # Rsyncs the vendor version of a library with a directory from ~/Repos.
 function repo-sync(){
+		watch=0
+	
+		OPTIND=1
+		while getopts 'w' c
+		do
+		  case $c in
+			w) watch=1 ;;
+		  esac
+		done
+		shift $((OPTIND-1))
 
 		if [[ -z "$1" ]]; then
 				echo ""
-				echo "Usage: $(green)repo-sync <rep_rel_source> [<author>]$(nocolor)"
+				echo "Usage: $(green)repo-sync [-w] <rep_rel_source> [<author>]$(nocolor)"
 				echo ""
 				echo "W/o specifying an author the package will be synced in $(green)vendor/lucatume/<repo>$(nocolor) directory:"
 				echo "	$(green)repo-link repo $(nocolor)"
 				echo ""
 				echo "Specifying an author the package will be synced in $(green)vendor/<author>/<repo>$(nocolor) directory:"
 				echo "	$(green)repo-link repo author$(nocolor)"
+				echo ""
+				echo "The package will be synced in $(green)vendor/lucatume/<repo>$(nocolor) directory on a watch:"
+				echo "	$(green)repo-link -w repo$(nocolor)"
 				return -1
-		fi
-
+		fi 
 		source="${HOME}/Repos/$1"
 		dest="$(pwd)/vendor/${2:-lucatume}"
 		echo "$(green)Source:$(nocolor) ${source}"
 		echo "$(green)Destination:$(nocolor) ${dest}"
+		echo "$(green)Watching:$(nocolor) ${watch}"
 
 		if [[ ! -d "${source}" ]]; then
 				echo ""
@@ -201,18 +214,24 @@ function repo-sync(){
 		echo ""
 		echo "RSyncing: '${source}' to '${dest}/$1'..."
 		echo ""
-
-		rsync -aE "$source" "$dest"
-
-		echo ""
-
-		if [[ $? == 0 ]]; then
-				echo "Done."
-		else
-				echo "$(red)Something went wrong, see the error above.$(nocolor)"
-		fi
-
-		tree -L 2 -C "${dest}"
 	
+		if [[ $watch == 0 ]]; then 
+				rsync -aE "$source" "$dest"
+
+				echo ""
+
+				if [[ $? == 0 ]]; then
+						echo "Done."
+				else
+						echo "$(red)Something went wrong, see the error above.$(nocolor)"
+				fi
+
+				tree -L 2 -C "${dest}"
+		else
+				echo "$(green)Starting watch...$(nocolor)"
+				sleep 1
+				watch -cd "rsync -aE '${source}' '${dest}'"
+		fi 
+
 		return $?
 }

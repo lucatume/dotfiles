@@ -223,6 +223,12 @@ if type exa &>/dev/null; then
 fi
 
 # Added by travis gem.
+# If lazygit is installed, then alias it to "lgit".
+if type lazygit &>/dev/null; then
+  alias lgit="lazygit"
+fi
+
+# Added by travis gem.	
 [ -f /Users/lucatume/.travis/travis.sh ] && source /Users/lucatume/.travis/travis.sh
 
 # Deduplicate the $PATH entries.

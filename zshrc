@@ -185,7 +185,7 @@ if [ type nodenv >/dev/null 2>&1 ]; then
 	eval "$(nodenv init -)"
 fi
 
-if [ type nodenv >/dev/null 2>&1 ]; then
+if [[ -d  "$HOME/.phpenv/bin" ]]; then
 	# Start phpenv and append its path before the other ones.
 	# This command is not fenced into a if-then check as I want an error thrown if not installed.
 	export PATH="$HOME/.phpenv/bin:$PATH"

@@ -165,7 +165,8 @@ eval "$(hub alias -s)"
 # Load a set of function files; each one will be loaded if the corresponding binary is present.
 binFuncs=( "docker" "docker-machine" "git" "zsh" "travis" "mt" )
 for bin in "${binFuncs[@]}"; do
-    if  [ type "$bin" >/dev/null 2>&1 ]; then
+	exists="$(type "$bin" >/dev/null 2>&1; echo $?)"
+    if  [ $exists ]; then
         source ~/.zsh-functions/$bin
     fi
 done

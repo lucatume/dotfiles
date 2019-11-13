@@ -18,8 +18,8 @@ function nocolor(){
 
 # Open a file in Marked 2.
 function marked(){
-		if [ $1 ]; then
-				open -a "Marked 2" $1;
+		if [ "$1" ]; then
+				open -a "Marked 2" "$1";
 		else
 				open -a "Marked 2";
 		fi
@@ -27,16 +27,16 @@ function marked(){
 
 # Creates the slug version of an input string.
 function slugify(){
-		echo -n "$@" | sed -e 's/[^[:alnum:]]/-/g' | tr -s '-' | tr A-Z a-z
+		echo -n "$@" | sed -e 's/[^[:alnum:]]/-/g' | tr -s '-' | tr '[:upper:]' '[:lower]'
 }
 
 # Batch rename all the files and directories in the current working directory to theirs slug version.
 # Requires the slugify function.
 function slugify-all(){
-		for f in $(pwd)/*; do
-				d="$(slugify $(basename $f))"; 
-				if [ $(pwd)/$d != $f ]; then 
-						mv $f $(pwd)/$d; 
+		for f in "$(pwd)"/*; do
+				d="$(slugify "$(basename "$f")")"; 
+				if [ "$(pwd)/$d" != "$f" ]; then 
+						mv "$f" "$(pwd)/$d"; 
 				fi; 
 		done
 }
@@ -44,9 +44,9 @@ function slugify-all(){
 # Recursively renames all files and directoriesj in the current working directory to their slugified version.
 function recursive-slugify-all(){
 		slugify-all;
-		for d in $(pwd)/*/; do
+		for d in "$(pwd)"/*/; do
 				echo "slugifying sub-dir $d"
-				(cd $d; recursive-slugify-all);
+				(cd "$d" || exit 1; recursive-slugify-all);
 		done
 }
 
@@ -62,7 +62,7 @@ function repo-link(){
 				echo ""
 				echo "Specifying an author/package the package will be linked in $(green)vendor/<author>/<package>$(nocolor) directory:"
 				echo "	$(green)repo-link repo author/package$(nocolor)"
-				return -1
+				return 1
 		fi
 
 		source="${HOME}/Repos/$1"
@@ -73,15 +73,15 @@ function repo-link(){
 		if [[ ! -d "${source}" ]]; then
 				echo ""
 				echo "$(red)Repo directory ($source) does not exist!$(nocolor)"
-				return -1
+				return 1
 		fi
-
+		dest_parent=$(dirname "$(dest)")
 		if [[ -d "$dest" ]]; then
 				echo ""
 				echo "$(green)Destination directory (${dest}) exists."
 				echo ""
 				echo -ne "$(cyan)Would you like to replace it with a symbolic link to the repo directory (y/n)?$(nocolor) "
-				read replace
+				read -r replace
 
 				if [[ "${replace}" =~ ^n  ]]; then
 						echo ""
@@ -91,28 +91,28 @@ function repo-link(){
 						echo ""
 						echo "$(green)Removing the '${dest}' directory...$(nocolor)"
 
-						rm -rf "$dest"
+						
 
-						if [[ $? != 0 ]]; then
+						if [[ "$(rm -rf "$dest")" != 0 ]]; then
 								echo ""
 								echo "$(red)Could not remove the '${dest} directory.'$(nocolor)"
-								return -1
+								return 1
 						fi
 				fi
-		elif [[ ! -d "$(dirname (${dest}))" ]];then
+		elif [[ ! -d "${dest_parent}" ]];then
 				echo ""
-				echo "$(green)Destination directory parent ($(dirname ${dest})) does not exist."
+				echo "$(green)Destination directory parent ($(dirname "${dest}")) does not exist."
 				echo ""
 				echo -ne "$(cyan)Would you like to create it (y/n)?$(nocolor) "
-				read create
+				read -r create
 
 				if [[ ${create} =~ ^y ]]; then
 						echo ""
-						echo "Creating the '$(dirname ${dest})' directory..."
-						mkdir -p "$(dirname ${dest})"
+						echo "Creating the '$(dirname "${dest}")' directory..."
+						
 
-						if [[ $? != 0 ]]; then
-								return -1
+						if [[ "$(mkdir -p "$(dirname "${dest}")")" != 0 ]]; then
+								return 1
 						fi
 				fi
 		fi
@@ -121,16 +121,16 @@ function repo-link(){
 		echo "Creating symbolic link between: '${source}' and '${dest}'"
 		echo ""
 
-		ln -s "${source}" "${dest}"
+		
 
-		if [[ $? != 0 ]]; then
-				return -1
+		if [[ "$(ln -s "${source}" "${dest}")" != 0 ]]; then
+				return 1
 		fi
 
 		echo "All done."
 		echo ""
 
-		tree -L 2 -l -C "$(dirname ${dest})"
+		tree -L 2 -l -C "$(dirname "${dest}")"
 }
 
 # Rsyncs the vendor version of a library with a directory from ~/Repos.
@@ -142,6 +142,7 @@ function repo-sync(){
 		do
 				case $c in
 						w) watch=1 ;;
+						*) ;;
 				esac
 		done
 		shift $((OPTIND-1))
@@ -151,7 +152,7 @@ function repo-sync(){
 				echo "Usage: $(green)repo-sync [-w] <rep_rel_source> [<author_or_dir>]$(nocolor)"
 				echo ""
 				echo "W/o specifying an author the package will be synced in $(green)vendor/lucatume/<repo>$(nocolor) directory:"
-				echo "	$(green)repo-link repo $(nocolor)"
+				echo "	$(green)repo-sync repo $(nocolor)"
 				echo ""
 				echo "Specifying an author the package will be synced in $(green)vendor/<author>/<repo>$(nocolor) directory:"
 				echo "	$(green)repo-link repo author$(nocolor)"
@@ -161,7 +162,7 @@ function repo-sync(){
 				echo ""
 				echo "The package will be synced in $(green)vendor/lucatume/<repo>$(nocolor) directory on a watch:"
 				echo "	$(green)repo-link -w repo$(nocolor)"
-				return -1
+				return 1
 		fi 
 		source="${HOME}/Repos/$1"
 
@@ -178,40 +179,39 @@ function repo-sync(){
 		if [[ ! -d "${source}" ]]; then
 				echo ""
 				echo "$(red)Repo directory ($source) does not exist!$(nocolor)"
-				return -1
+				return 1
 		fi
 
 		if [[ ! -d "${dest}" ]]; then
 				echo ""
 				echo "$(green)Parent directory '${dest}' does not exist.$(nocolor)"
 				echo "$(cyan)Would you like to create it? (y/n)$(nocolor) "
-				read create
+				read -r create
 
 				if [[ ${create} =~ ^y ]]; then
 						echo ""
 						echo "Creating the '${dest}' directory..."
-						mkdir -p "${dest}"
+						
 
-						if [[ $? != 0 ]]; then
-								return -1
+						if [[ "$(mkdir -p "${dest}")" != 0 ]]; then
+								return 1
 						fi
 				fi
 		elif [[ -L "${dest}/$1" ]]; then
 				echo ""
 				echo "$(green)Directory '${dest}/$1' is a symbolic link.$(nocolor)"
 				echo "$(cyan)Would you like to remove it? (y/n)$(nocolor) "
-				read remove
+				read -r remove
 
 				if [[ $remove =~ ^y ]]; then
 						echo ""
 						echo "$(green)Removing the '${dest}/$1' directory...$(nocolor)"
 
-						rm -rf "$dest/$1"
-
-						if [[ $? != 0 ]]; then
+						
+						if [[ "$(rm -rf "${dest:?}/$1")" != 0 ]]; then
 								echo ""
 								echo "$(red)Could not remove the '${dest}/$1' directory.'$(nocolor)"
-								return -1
+								return 1
 						fi
 				else
 						echo ""
@@ -225,11 +225,11 @@ function repo-sync(){
 		echo ""
 
 		if [[ $watch == 0 ]]; then 
-				rsync -aE "$source" "$dest"
+				
 
 				echo ""
 
-				if [[ $? == 0 ]]; then
+				if [[ "$(rsync -aE "$source" "$dest")" == 0 ]]; then
 						echo "Done."
 				else
 						echo "$(red)Something went wrong, see the error above.$(nocolor)"

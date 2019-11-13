@@ -75,7 +75,7 @@ function repo-link(){
 				echo "$(red)Repo directory ($source) does not exist!$(nocolor)"
 				return -1
 		fi
-		
+
 		if [[ -d "$dest" ]]; then
 				echo ""
 				echo "$(green)Destination directory (${dest}) exists."
@@ -136,19 +136,19 @@ function repo-link(){
 # Rsyncs the vendor version of a library with a directory from ~/Repos.
 function repo-sync(){
 		watch=0
-	
+
 		OPTIND=1
 		while getopts 'w' c
 		do
-		  case $c in
-			w) watch=1 ;;
-		  esac
+				case $c in
+						w) watch=1 ;;
+				esac
 		done
 		shift $((OPTIND-1))
 
 		if [[ -z "$1" ]]; then
 				echo ""
-				echo "Usage: $(green)repo-sync [-w] <rep_rel_source> [<author>]$(nocolor)"
+				echo "Usage: $(green)repo-sync [-w] <rep_rel_source> [<author_or_dir>]$(nocolor)"
 				echo ""
 				echo "W/o specifying an author the package will be synced in $(green)vendor/lucatume/<repo>$(nocolor) directory:"
 				echo "	$(green)repo-link repo $(nocolor)"
@@ -156,12 +156,21 @@ function repo-sync(){
 				echo "Specifying an author the package will be synced in $(green)vendor/<author>/<repo>$(nocolor) directory:"
 				echo "	$(green)repo-link repo author$(nocolor)"
 				echo ""
+				echo "Specifying an existing dir the package will be synced in $(green)<dir>/<repo>$(nocolor) directory:"
+				echo "	$(green)repo-link repo ./plugins$(nocolor)"
+				echo ""
 				echo "The package will be synced in $(green)vendor/lucatume/<repo>$(nocolor) directory on a watch:"
 				echo "	$(green)repo-link -w repo$(nocolor)"
 				return -1
 		fi 
 		source="${HOME}/Repos/$1"
-		dest="$(pwd)/vendor/${2:-lucatume}"
+
+		if [[ -d "$2" ]]; then
+				dest="$2"
+		else
+				dest="$(pwd)/vendor/${2:-lucatume}"
+		fi
+
 		echo "$(green)Source:$(nocolor) ${source}"
 		echo "$(green)Destination:$(nocolor) ${dest}"
 		echo "$(green)Watching:$(nocolor) ${watch}"
@@ -214,7 +223,7 @@ function repo-sync(){
 		echo ""
 		echo "RSyncing: '${source}' to '${dest}/$1'..."
 		echo ""
-	
+
 		if [[ $watch == 0 ]]; then 
 				rsync -aE "$source" "$dest"
 

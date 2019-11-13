@@ -78,6 +78,7 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		Plugin 'lifepillar/vim-solarized8'
 		Plugin 'herrbischoff/cobalt2.vim'
 		Plugin 'gertjanreynaert/cobalt2-vim-theme'
+		Plugin 'scrooloose/syntastic'
 
 		" All of your Plugins must be added before the following line
 		call vundle#end()            " required
@@ -102,4 +103,15 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		colorscheme cobalt2
 		set background=dark
 		set termguicolors
+	
+		" Set up some reasonable defaults for syntastic.
+		set statusline+=%#warningmsg#
+		set statusline+=%{SyntasticStatuslineFlag()}
+		set statusline+=%*
+
+		let g:syntastic_always_populate_loc_list = 1
+		let g:syntastic_auto_loc_list = 1
+		let g:syntastic_check_on_open = 1
+		let g:syntastic_check_on_wq = 0
+		let g:syntastic_auto_jump = 1
 endif

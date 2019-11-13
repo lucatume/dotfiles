@@ -179,7 +179,7 @@ for funcFile in "${funcFiles[@]}"; do
     fi
 done
 
-if [ type nodenv >/dev/null 2>&1 ]; then
+if [[ "$(type nodenv >/dev/null 2>&1; echo $?)" == 0 ]]; then
 	# Start nodenv and append its path before the other ones.
 	# This command is not fenced into a if-then check as I want an error thrown if not installed.
 	export PATH=~/.nodenv/shims:$PATH

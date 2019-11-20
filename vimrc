@@ -24,6 +24,9 @@ set path+=**
 " Use a menu to find the files.
 set wildmenu
 
+" Show the line numbers.
+set nu
+
 " Type MakeTags in the vim command to create the `tags` for the current code base.
 command! MakeTags !ctags -R .
 

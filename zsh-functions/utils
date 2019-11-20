@@ -90,12 +90,11 @@ function repo-link(){
 				else
 						echo ""
 						echo "$(green)Removing the '${dest}' directory...$(nocolor)"
+						rm -rf "$dest"
 
-						
-
-						if [[ "$(rm -rf "$dest")" != 0 ]]; then
+						if [[ -d "${dest}" ]]; then
 								echo ""
-								echo "$(red)Could not remove the '${dest} directory.'$(nocolor)"
+								echo "$(red)Could not remove the '${dest}' directory.$(nocolor)"
 								return 1
 						fi
 				fi
@@ -206,9 +205,9 @@ function repo-sync(){
 				if [[ $remove =~ ^y ]]; then
 						echo ""
 						echo "$(green)Removing the '${dest}/$1' directory...$(nocolor)"
+						rm -rf "${dest:?}/$1"
 
-						
-						if [[ "$(rm -rf "${dest:?}/$1")" != 0 ]]; then
+						if [[ -d "${dest:?}/$1" ]]; then
 								echo ""
 								echo "$(red)Could not remove the '${dest}/$1' directory.'$(nocolor)"
 								return 1

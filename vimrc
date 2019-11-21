@@ -1,3 +1,7 @@
+" Start here and clone Vundle, then run :PluginInstall
+command InstallVundle !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+
 " I've never used vi once in my life, before my time; it's ok to drop compatibility.
 set nocompatible
 
@@ -118,3 +122,4 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		let g:syntastic_check_on_wq = 0
 		let g:syntastic_auto_jump = 1
 endif
+

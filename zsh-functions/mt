@@ -1,22 +1,24 @@
+#! /usr/bin/env bash
+
 function mt-deep-clone(){
-    git clone moderntribe/$1 && (cd $1; git submodule update --recursive --init)
+    git clone moderntribe/"$1" && (cd "$1" || exit 1; git submodule update --recursive --init)
 }
 
 function mt_sync_here(){
-    cd app/public/wp-content/plugins && mt sync $1
+    cd app/public/wp-content/plugins && mt sync "$1"
 }
 
 function sq1_global_start(){
-    (cd ${HOME}/Repos/square-one/dev/docker/global; sh ./start.sh)
+    (cd "${HOME}"/Repos/square-one/dev/docker/global || exit 1; sh ./start.sh)
 }
 
 function sq1_global_stop(){
-    (cd ${HOME}/Repos/square-one/dev/docker/global; sh ./stop.sh)
+    (cd "${HOME}"/Repos/square-one/dev/docker/global || exit 1; sh ./stop.sh)
 }
 
 function loxi_start(){
     sq1_global_start
-    (cd ${HOME}/Repos/calendar-saas/dev/docker; sh ./start.sh; sh ./start-queue-worker.sh)
+    (cd "${HOME}"/Repos/calendar-saas/dev/docker || exit 1; sh ./start.sh; sh ./start-queue-worker.sh)
 }
 
 function loxi_error_log(){
@@ -29,11 +31,11 @@ function loxi_start_and_build(){
 }
 
 function loxi_build(){
-    (cd ${HOME}/Repos/calendar-saas/dev/docker; sh ./build.sh)
+    (cd "${HOME}"/Repos/calendar-saas/dev/docker || exit 1; sh ./build.sh)
 }
 
 function loxi_stop(){
-    (cd ${HOME}/Repos/calendar-saas/dev/docker; sh ./stop.sh)
+    (cd "${HOME}"/Repos/calendar-saas/dev/docker || exit 1; sh ./stop.sh)
     sq1_global_stop
 }
 
@@ -43,6 +45,14 @@ function loxi_restart(){
 }
 
 function loxi_logs(){
-    (cd ${HOME}/Repos/calendar-saas/dev/docker; sh ./logs.sh)
+    (cd "${HOME}"/Repos/calendar-saas/dev/docker || exit 1; sh ./logs.sh)
 }
 
+function mtnpmbuild(){
+		node_version=${1:-8.9.4}
+		if [[ $(nodenv shell "${node_version}") -eq 0 ]]; then
+				nodenv shell "${node_version}" && npm install && npm run build
+		else
+				echo "The commmand 'nodenv shell ${node_version}' terminated with error."
+		fi
+}

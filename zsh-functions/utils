@@ -243,3 +243,11 @@ function repo-sync(){
 
 		return $?
 }
+
+# Add auto-completion for the repo-link and repo-sync function.
+function _repo_completions(){
+		COMPREPLY+=("$(ls -a ~/Repos)")
+}
+
+complete -F _repo_completions repo-link
+complete -F _repo_completions repo-sync

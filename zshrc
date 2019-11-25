@@ -119,6 +119,8 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 # Reload completions after oh-my-zsh loaded.
+autoload bashcompinit
+bashcompinit
 compinit
 
 # User configuration
@@ -239,3 +241,8 @@ export PATH=$DEDUPED_PATH
 # Activate linuxbrew if installed.
 test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
 test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+
+# Activate brew bash-completions if available.
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
+

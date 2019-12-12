@@ -238,6 +238,9 @@ fi
 DEDUPED_PATH=$(n= IFS=':'; for e in $PATH; do [[ :$n == *:$e:* ]] || n+=$e:; done; echo "${n:0: -1}")
 export PATH=$DEDUPED_PATH
 
+# Alias to allow PHP scripts to pickup a locally originated wp-cli request.
+alias lwp="LOCALHOST_WP=1 wp"
+
 # Activate linuxbrew if installed.
 test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
 test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)

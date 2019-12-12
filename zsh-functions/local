@@ -48,3 +48,8 @@ function local-host-ip(){
 		| cut -f2 -d: \
 		| tr -d ' '
 }
+
+# Serve the current directory on localhost:8080.
+function lserve(){
+		php -t . -S localhost:8080
+}

@@ -51,5 +51,5 @@ function local-host-ip(){
 
 # Serve the current directory on localhost:8080.
 function lserve(){
-		php -t . -S localhost:8080
+		LOCALHOST_WP=1 wp server
 }

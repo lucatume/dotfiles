@@ -2,9 +2,7 @@
 
 # Returns the path to the Local by Flywheel shell files appending a path.
 function local_ssh_entry(){
-		path=${1:-""}
-
-		echo ${HOME}/Library/Application\ Support/Local\ by\ Flywheel/ssh-entry/${path}
+		echo "${HOME}"/Library/Application\ Support/Local\ by\ Flywheel/ssh-entry/
 }
 
 # Starts an SSH session in a specific machine, identified by its name.
@@ -21,32 +19,32 @@ function local-ssh(){
 				return
 		fi
 
-		dir=$(local_ssh_entry)
-		file=$(ag ${1} ${dir} --files-with-matches)
+		dir="$(local_ssh_entry)"
+		file=$(ag "${1}" "${dir}" --files-with-matches)
 
-		if [ ${file} -z ];then 
+		if [[ -z "${file}" ]];then 
 				echo "No Local site found for ${1}."
 				return
 		fi
 
-		sh ${file}
+		sh "${file}"
 }
 
 # Prints the IP address of the Local By Flywheel Docker machine.
 function local-machine-ip(){
-		echo $(cat ${HOME}/Library/Application\ Support/Local\ by\ Flywheel/machine-ip.json)
+		echo cat "${HOME}"/Library/Application\ Support/Local\ by\ Flywheel/machine-ip.json
 }
 
 # Opens an SSH session into the Local Docker machine.
 function local-machine-ssh(){
 		machine_address="$(local-machine-ip)"
-		ssh -i ~/.docker/machine/machines/local-by-flywheel/id_rsa docker@${machine_address}
+		ssh -i ~/.docker/machine/machines/local-by-flywheel/id_rsa docker@"${machine_address}"
 }
 
 # Output the IP Address of the Local by Flywheel host machine.
 function local-host-ip(){
-		echo "$(VBoxManage guestproperty get local-by-flywheel /VirtualBox/GuestInfo/Net/2/V4/IP \
-				| grep Value \
-				| cut -f2 -d: \
-				| tr -d ' ')"
+		VBoxManage guestproperty get local-by-flywheel /VirtualBox/GuestInfo/Net/2/V4/IP \
+		| grep Value \
+		| cut -f2 -d: \
+		| tr -d ' '
 }

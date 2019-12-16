@@ -250,5 +250,3 @@ test -d ~/Repos/monorepo-tools && export PATH=~/Repos/monorepo-tools:$PATH
 
 # Activate brew bash-completions if available.
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
-
-

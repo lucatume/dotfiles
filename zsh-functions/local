@@ -32,7 +32,7 @@ function local-ssh(){
 
 # Prints the IP address of the Local By Flywheel Docker machine.
 function local-machine-ip(){
-		echo cat "${HOME}"/Library/Application\ Support/Local\ by\ Flywheel/machine-ip.json
+		cat "${HOME}""/Library/Application Support/Local by tFlywheel/machine-ip.json"
 }
 
 # Opens an SSH session into the Local Docker machine.

@@ -1,61 +1,79 @@
+#! /bin/env/bash
+
 # stop all running containers
 function docker-stop-all() {
-	docker stop $(docker ps -q)
+	[ ! -z "$(docker ps -q)" ] && docker stop $(docker ps -q) 2> /dev/null || echo "No containers to stop."
+		
 }
 
 # removea all containers
 function docker-remove-all() {
-	docker rm $(docker ps -aq)
+	[ ! -z "$(docker ps -aq)" ] && docker rm $(docker ps -aq) 2> /dev/null || echo "No containers to remove."
+}
+
+# remove all docker volumes
+function docker-remove-volumes(){
+	[ ! -z "$(docker volume ls -q)" ] && docker volume rm $(docker volume ls -q) 2> /dev/null || echo "No volumes to remove."
+}
+
+# remove all docker networks
+function docker-remove-networks(){
+	[ ! -z "$(docker network ls -q)" ] && docker network rm $(docker network ls -q) 2> /dev/null || echo "No networks to remove."
 }
 
 # stop and remove all running and stopped containers
 function docker-stop-and-remove-all() {
-	docker-stop-all && docker-remove-all
+		docker-stop-all;
+		docker-remove-all;
+		docker-remove-volumes;
+		docker-remove-networks;
 }
 
 # ssh into a running container, a la `vagrant ssh`
 function docker-ssh() {
-	docker exec -it $1 /bin/bash
+		docker exec -it $1 /bin/bash
 }
 
 # remove all untagged images (usually temporary builds)
 function docker-rmi-dangling (){
-    docker rmi $(docker images -f dangling=true -q)
+		docker rmi $(docker images -f dangling=true -q)
 }
-	
+
 # connect to the running database container using mysql
 function docker-mysql(){
-	mysql -h db.localhost -u root -proot 
+		mysql -h db.localhost -u root -proot 
 }
 
 # connect to the running database container using mycli
 function docker-mycli(){
-	mycli -h db.localhost -u root -p root 
+		mycli -h db.localhost -u root -p root 
 }
 
 # return the PHP version information for a docker-compose managed "php" container in the current folder
 function docker-php-version(){
-    docker-compose exec php php --version
+		docker-compose exec php php --version
 }
 
 # deactivate XDebug in a docker-compose managed Docker container in the current folder
 function docker-xoff(){
-    docker-compose exec php sh -c 'sed -i "/^zend_extension.*xdebug/ s/^zend_/;zend_/g" $(php --ini | grep xdebug.ini )'
-    docker-php-version
+		docker-compose exec php sh -c 'sed -i "/^zend_extension.*xdebug/ s/^zend_/;zend_/g" $(php --ini | grep xdebug.ini )'
+				docker-php-version
 }
 
 # activate XDebug in a docker-compose managed Docker container in the current folder
 function docker-xoff(){
-    docker-compose exec php sh -c 'sed -i "/^;zend_extension.*xdebug/ s/^;zend_/zend_/g" $(php --ini | grep xdebug.ini )'
-    docker-php-version
+		docker-compose exec php sh -c 'sed -i "/^;zend_extension.*xdebug/ s/^;zend_/zend_/g" $(php --ini | grep xdebug.ini )'
+				docker-php-version
 }
 
 # Starts a Selenium standalone Chrome container listening on port 4444.
 function dch(){
-    docker run --rm -d -p 4444:4444 selenium/standalone-chrome
+		docker run --rm -d -p 4444:4444 selenium/standalone-chrome
 }
 
 # Returns the IP Address of a running Docker container.
 function docker-ip(){
 		docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $1
 }
+
+alias ddd=docker-stop-and-remove-all

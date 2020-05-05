@@ -33,215 +33,215 @@ function slugify(){
 # Batch rename all the files and directories in the current working directory to theirs slug version.
 # Requires the slugify function.
 function slugify-all(){
-		for f in "$(pwd)"/*; do
-				d="$(slugify "$(basename "$f")")"; 
-				if [ "$(pwd)/$d" != "$f" ]; then 
-						mv "$f" "$(pwd)/$d"; 
-				fi; 
-		done
+for f in "$(pwd)"/*; do
+		d="$(slugify "$(basename "$f")")"; 
+		if [ "$(pwd)/$d" != "$f" ]; then 
+				mv "$f" "$(pwd)/$d"; 
+		fi; 
+done
 }
 
 # Recursively renames all files and directoriesj in the current working directory to their slugified version.
 function recursive-slugify-all(){
-		slugify-all;
-		for d in "$(pwd)"/*/; do
-				echo "slugifying sub-dir $d"
-				(cd "$d" || exit 1; recursive-slugify-all);
-		done
+slugify-all;
+for d in "$(pwd)"/*/; do
+		echo "slugifying sub-dir $d"
+		(cd "$d" || exit 1; recursive-slugify-all);
+done
 }
 
 # Links the vendor version of a library with a directory from ~/Repos.
 function repo-link(){
 
-		if [[ -z "$1" ]]; then
-				echo ""
-				echo "Usage: $(green)repo-link <rep_rel_source> [<author/package>]$(nocolor)"
-				echo ""
-				echo "W/o specifying an author/package the package will be linked in $(green)vendor/lucatume/<package>$(nocolor) directory:"
-				echo "	$(green)repo-link repo $(nocolor)"
-				echo ""
-				echo "Specifying an author/package the package will be linked in $(green)vendor/<author>/<package>$(nocolor) directory:"
-				echo "	$(green)repo-link repo author/package$(nocolor)"
-				return 1
-		fi
+if [[ -z "$1" ]]; then
+		echo ""
+		echo "Usage: $(green)repo-link <rep_rel_source> [<author/package>]$(nocolor)"
+		echo ""
+		echo "W/o specifying an author/package the package will be linked in $(green)vendor/lucatume/<package>$(nocolor) directory:"
+		echo "	$(green)repo-link repo $(nocolor)"
+		echo ""
+		echo "Specifying an author/package the package will be linked in $(green)vendor/<author>/<package>$(nocolor) directory:"
+		echo "	$(green)repo-link repo author/package$(nocolor)"
+		return 1
+fi
 
-		source="${HOME}/Repos/$1"
-		dest="$(pwd)/vendor/${2:-"lucatume/$1"}"
-		echo "$(green)Source:$(nocolor) ${source}"
-		echo "$(green)Destination:$(nocolor) ${dest}"
+source="${HOME}/Repos/$1"
+dest="$(pwd)/vendor/${2:-"lucatume/$1"}"
+echo "$(green)Source:$(nocolor) ${source}"
+echo "$(green)Destination:$(nocolor) ${dest}"
 
-		if [[ ! -d "${source}" ]]; then
-				echo ""
-				echo "$(red)Repo directory ($source) does not exist!$(nocolor)"
-				return 1
-		fi
-		dest_parent=$(dirname "$(dest)")
-		if [[ -d "$dest" ]]; then
-				echo ""
-				echo "$(green)Destination directory (${dest}) exists."
-				echo ""
-				echo -ne "$(cyan)Would you like to replace it with a symbolic link to the repo directory (y/n)?$(nocolor) "
-				read -r replace
+if [[ ! -d "${source}" ]]; then
+		echo ""
+		echo "$(red)Repo directory ($source) does not exist!$(nocolor)"
+		return 1
+fi
+dest_parent=$(dirname "${dest}")
+if [[ -d "$dest" ]]; then
+		echo ""
+		echo "$(green)Destination directory (${dest}) exists."
+		echo ""
+		echo -ne "$(cyan)Would you like to replace it with a symbolic link to the repo directory (y/n)?$(nocolor) "
+		read -r replace
 
-				if [[ "${replace}" =~ ^n  ]]; then
+		if [[ "${replace}" =~ ^n  ]]; then
+				echo ""
+				echo "Ok, no symbolic link created."
+				return 0
+		else
+				echo ""
+				echo "$(green)Removing the '${dest}' directory...$(nocolor)"
+				rm -rf "$dest"
+
+				if [[ -d "${dest}" ]]; then
 						echo ""
-						echo "Ok, no symbolic link created."
-						return 0
-				else
-						echo ""
-						echo "$(green)Removing the '${dest}' directory...$(nocolor)"
-						rm -rf "$dest"
-
-						if [[ -d "${dest}" ]]; then
-								echo ""
-								echo "$(red)Could not remove the '${dest}' directory.$(nocolor)"
-								return 1
-						fi
-				fi
-		elif [[ ! -d "${dest_parent}" ]];then
-				echo ""
-				echo "$(green)Destination directory parent ($(dirname "${dest}")) does not exist."
-				echo ""
-				echo -ne "$(cyan)Would you like to create it (y/n)?$(nocolor) "
-				read -r create
-
-				if [[ ${create} =~ ^y ]]; then
-						echo ""
-						echo "Creating the '$(dirname "${dest}")' directory..."
-						
-
-						if [[ "$(mkdir -p "$(dirname "${dest}")")" != 0 ]]; then
-								return 1
-						fi
+						echo "$(red)Could not remove the '${dest}' directory.$(nocolor)"
+						return 1
 				fi
 		fi
-
+elif [[ ! -d "${dest_parent}" ]];then
 		echo ""
-		echo "Creating symbolic link between: '${source}' and '${dest}'"
+		echo "$(green)Destination directory parent ($(dirname "${dest}")) does not exist."
 		echo ""
+		echo -ne "$(cyan)Would you like to create it (y/n)?$(nocolor) "
+		read -r create
 
-		
+		if [[ ${create} =~ ^y ]]; then
+				echo ""
+				echo "Creating the '$(dirname "${dest}")' directory..."
 
-		if [[ "$(ln -s "${source}" "${dest}")" != 0 ]]; then
-				return 1
+
+				if [[ "$(mkdir -p "$(dirname "${dest}")")" != 0 ]]; then
+						return 1
+				fi
 		fi
+fi
 
-		echo "All done."
-		echo ""
+echo ""
+echo "Creating symbolic link between: '${source}' and '${dest}'"
+echo ""
 
-		tree -L 2 -l -C "$(dirname "${dest}")"
+
+
+if [[ "$(ln -s "${source}" "${dest}")" != 0 ]]; then
+		return 1
+fi
+
+echo "All done."
+echo ""
+
+tree -L 2 -l -C "$(dirname "${dest}")"
 }
 
 # Rsyncs the vendor version of a library with a directory from ~/Repos.
 function repo-sync(){
-		watch=0
+watch=0
 
-		OPTIND=1
-		while getopts 'w' c
-		do
-				case $c in
-						w) watch=1 ;;
-						*) ;;
-				esac
-		done
-		shift $((OPTIND-1))
+OPTIND=1
+while getopts 'w' c
+do
+		case $c in
+				w) watch=1 ;;
+				*) ;;
+		esac
+done
+shift $((OPTIND-1))
 
-		if [[ -z "$1" ]]; then
-				echo ""
-				echo "Usage: $(green)repo-sync [-w] <rep_rel_source> [<author_or_dir>]$(nocolor)"
-				echo ""
-				echo "W/o specifying an author the package will be synced in $(green)vendor/lucatume/<repo>$(nocolor) directory:"
-				echo "	$(green)repo-sync repo $(nocolor)"
-				echo ""
-				echo "Specifying an author the package will be synced in $(green)vendor/<author>/<repo>$(nocolor) directory:"
-				echo "	$(green)repo-link repo author$(nocolor)"
-				echo ""
-				echo "Specifying an existing dir the package will be synced in $(green)<dir>/<repo>$(nocolor) directory:"
-				echo "	$(green)repo-link repo ./plugins$(nocolor)"
-				echo ""
-				echo "The package will be synced in $(green)vendor/lucatume/<repo>$(nocolor) directory on a watch:"
-				echo "	$(green)repo-link -w repo$(nocolor)"
-				return 1
-		fi 
-		source="${HOME}/Repos/$1"
+if [[ -z "$1" ]]; then
+		echo ""
+		echo "Usage: $(green)repo-sync [-w] <rep_rel_source> [<author_or_dir>]$(nocolor)"
+		echo ""
+		echo "W/o specifying an author the package will be synced in $(green)vendor/lucatume/<repo>$(nocolor) directory:"
+		echo "	$(green)repo-sync repo $(nocolor)"
+		echo ""
+		echo "Specifying an author the package will be synced in $(green)vendor/<author>/<repo>$(nocolor) directory:"
+		echo "	$(green)repo-link repo author$(nocolor)"
+		echo ""
+		echo "Specifying an existing dir the package will be synced in $(green)<dir>/<repo>$(nocolor) directory:"
+		echo "	$(green)repo-link repo ./plugins$(nocolor)"
+		echo ""
+		echo "The package will be synced in $(green)vendor/lucatume/<repo>$(nocolor) directory on a watch:"
+		echo "	$(green)repo-link -w repo$(nocolor)"
+		return 1
+fi 
+source="${HOME}/Repos/$1"
 
-		if [[ -d "$2" ]]; then
-				dest="$2"
+if [[ -d "$2" ]]; then
+		dest="$2"
+else
+		dest="$(pwd)/vendor/${2:-lucatume}"
+fi
+
+echo "$(green)Source:$(nocolor) ${source}"
+echo "$(green)Destination:$(nocolor) ${dest}"
+echo "$(green)Watching:$(nocolor) ${watch}"
+
+if [[ ! -d "${source}" ]]; then
+		echo ""
+		echo "$(red)Repo directory ($source) does not exist!$(nocolor)"
+		return 1
+fi
+
+if [[ ! -d "${dest}" ]]; then
+		echo ""
+		echo "$(green)Parent directory '${dest}' does not exist.$(nocolor)"
+		echo "$(cyan)Would you like to create it? (y/n)$(nocolor) "
+		read -r create
+
+		if [[ ${create} =~ ^y ]]; then
+				echo ""
+				echo "Creating the '${dest}' directory..."
+
+
+				if [[ "$(mkdir -p "${dest}")" != 0 ]]; then
+						return 1
+				fi
+		fi
+elif [[ -L "${dest}/$1" ]]; then
+		echo ""
+		echo "$(green)Directory '${dest}/$1' is a symbolic link.$(nocolor)"
+		echo "$(cyan)Would you like to remove it? (y/n)$(nocolor) "
+		read -r remove
+
+		if [[ $remove =~ ^y ]]; then
+				echo ""
+				echo "$(green)Removing the '${dest}/$1' directory...$(nocolor)"
+				rm -rf "${dest:?}/$1"
+
+				if [[ -d "${dest:?}/$1" ]]; then
+						echo ""
+						echo "$(red)Could not remove the '${dest}/$1' directory.'$(nocolor)"
+						return 1
+				fi
 		else
-				dest="$(pwd)/vendor/${2:-lucatume}"
-		fi
-
-		echo "$(green)Source:$(nocolor) ${source}"
-		echo "$(green)Destination:$(nocolor) ${dest}"
-		echo "$(green)Watching:$(nocolor) ${watch}"
-
-		if [[ ! -d "${source}" ]]; then
 				echo ""
-				echo "$(red)Repo directory ($source) does not exist!$(nocolor)"
-				return 1
+				echo "$(green)Ok, destination directory '${dest}/$1' not removed.$(nocolor)"
+				return 0
 		fi
+fi
 
-		if [[ ! -d "${dest}" ]]; then
-				echo ""
-				echo "$(green)Parent directory '${dest}' does not exist.$(nocolor)"
-				echo "$(cyan)Would you like to create it? (y/n)$(nocolor) "
-				read -r create
+echo ""
+echo "RSyncing: '${source}' to '${dest}/$1'..."
+echo ""
 
-				if [[ ${create} =~ ^y ]]; then
-						echo ""
-						echo "Creating the '${dest}' directory..."
-						
+if [[ $watch == 0 ]]; then 
 
-						if [[ "$(mkdir -p "${dest}")" != 0 ]]; then
-								return 1
-						fi
-				fi
-		elif [[ -L "${dest}/$1" ]]; then
-				echo ""
-				echo "$(green)Directory '${dest}/$1' is a symbolic link.$(nocolor)"
-				echo "$(cyan)Would you like to remove it? (y/n)$(nocolor) "
-				read -r remove
-
-				if [[ $remove =~ ^y ]]; then
-						echo ""
-						echo "$(green)Removing the '${dest}/$1' directory...$(nocolor)"
-						rm -rf "${dest:?}/$1"
-
-						if [[ -d "${dest:?}/$1" ]]; then
-								echo ""
-								echo "$(red)Could not remove the '${dest}/$1' directory.'$(nocolor)"
-								return 1
-						fi
-				else
-						echo ""
-						echo "$(green)Ok, destination directory '${dest}/$1' not removed.$(nocolor)"
-						return 0
-				fi
-		fi
 
 		echo ""
-		echo "RSyncing: '${source}' to '${dest}/$1'..."
-		echo ""
 
-		if [[ $watch == 0 ]]; then 
-				
-
-				echo ""
-
-				if [[ "$(rsync -aE "$source" "$dest")" == 0 ]]; then
-						echo "Done."
-				else
-						echo "$(red)Something went wrong, see the error above.$(nocolor)"
-				fi
-
-				tree -L 2 -C "${dest}"
+		if [[ "$(rsync -aE "$source" "$dest")" == 0 ]]; then
+				echo "Done."
 		else
-				echo "$(green)Starting watch...$(nocolor)"
-				sleep 1
-				watch -c "rsync -rtv --delete '${source}' '${dest}'; tree -L 2 -C '${dest}'"
-		fi 
+				echo "$(red)Something went wrong, see the error above.$(nocolor)"
+		fi
 
-		return $?
+		tree -L 2 -C "${dest}"
+else
+		echo "$(green)Starting watch...$(nocolor)"
+		sleep 1
+		watch -c "rsync -rtv --delete '${source}' '${dest}'; tree -L 2 -C '${dest}'"
+fi 
+
+return $?
 }
 
 # Add auto-completion for the repo-link and repo-sync function.
@@ -249,5 +249,52 @@ function _repo_completions(){
 		COMPREPLY+=("$(ls -a ~/Repos)")
 }
 
+function phpenv_refresh(){
+		if [ ! -d "${HOME}/.phpenv" ]; then
+				phpenv-install.sh
+		fi
+
+		if [ ! -d "${HOME}/.phpenv/versions" ]; then
+				mkdir -p "${HOME}/.phpenv/versions"
+		fi
+
+		brew_prefix="$(brew --prefix)"
+		brew_main_version_dirs="$(find "${brew_prefix}/Cellar" -maxdepth 1 -mindepth 1 -type d -name 'php@[0-9]\.[0-9]' -or -name 'php' 2>/dev/null)"
+
+		echo "${brew_main_version_dirs}" | while IFS= read -r main_version_dir; do
+
+		point_version_dirs="$(find "${main_version_dir}" -maxdepth 1 -mindepth 1 -type d -name '[0-9]\.[0-9]\.[0-9]' 2>/dev/null)"
+
+		echo "${point_version_dirs}" | while IFS= read -r version_dir; do
+
+		echo "Point version dir: ${version_dir}"
+
+		version="$(echo "${version_dir}" | perl -p -e 's#.*php@(\d+\.\d+\.\d+)$#\1#')"
+
+						#ln -s "${version_dir}" "${HOME}/.phpenv/versions/" 2>/dev/null
+						# ln -s "${version_dir}" "${HOME}/.phpenv/versions/${version}" 2>/dev/null
+						echo "Linked PHP version ${version} to dir ${version_dir}."
+				done
+		done
+		phpenv rehash
+}
+
+# Prints what's listening on a port.
+function tp(){
+		lsof -nP -iTCP:"$1" | grep LISTEN
+}
+
+# Returns the current IP Address of this machine polling a number of interfaces.
+function mip(){
+		for interface in [ "en0" ];	do
+				IP_ADDRESS="$(ipconfig getifaddr "${interface}")";
+				test -n "${IP_ADDRESS}" && { echo "${IP_ADDRESS}"; return; }
+		done
+}
+
 complete -F _repo_completions repo-link
 complete -F _repo_completions repo-sync
+
+function rand_string(){
+		cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
+}

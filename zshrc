@@ -12,11 +12,16 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # These settings apply to the powerlevel9k zsh theme.
 POWERLEVEL9K_DISABLE_RPROMPT=true
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
+# POWERLEVEL9K_DIR_FOREGROUND=''
+# POWERLEVEL9K_DIR_BACKGROUND=''
+# POWERLEVEL9K_VCS_FOREGROUND=''
+# POWERLEVEL9K_VCS_BACKGROUND=''
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 # See https://github.com/Powerlevel9k/powerlevel9k#dir
 POWERLEVEL9K_SHORTEN_STRATEGY=default
 # Use with light themes.
 POWERLEVEL9K_COLOR_SCHEME='dark'
+POWERLEVEL9K_PROMPT_ON_NEWLINE=false
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -62,11 +67,12 @@ POWERLEVEL9K_COLOR_SCHEME='dark'
 # Register them here to dynamically load them from the ~/.zsh-functions files.
 binPaths=(
 "/usr/local/bin" # homebrew on MacOs.
+"/usr/local/sbin" # homebrew sbin path.
 "$HOME/.composer/vendor/bin" # Global Composer binaries on Mac OS.
 "$HOME/.config/composer/vendor/bin" # Global Composer binaries on Linux.
 "/home/linuxbrew/.linuxbrew/bin" # Linuxbrew default installation.
 "$HOME/.linuxbrew/bin" # Linuxbrew alt installation path.
-"/usr/lib/go-1.8/bin" # Go language binaries.
+"$HOME/go/bin" # Go language binaries.
 "$HOME/Repos/tribe-product-utils" # Modern Tribe Products utils.
 )
 for binPath in ${binPaths}; do
@@ -220,11 +226,6 @@ if type googler &>/dev/null; then
   alias g="googler -l en -c com"
 fi
 
-# If exa is installed, then alias it to "ls".
-if type exa &>/dev/null; then
-  alias ls="exa"
-fi
-
 # Added by travis gem.
 # If lazygit is installed, then alias it to "lgit".
 if type lazygit &>/dev/null; then
@@ -233,6 +234,9 @@ fi
 
 # Added by travis gem.	
 [ -f /Users/lucatume/.travis/travis.sh ] && source /Users/lucatume/.travis/travis.sh
+
+# If Modern Tribe `tric` is available, then add it to PATH.
+test -f "${HOME}/Repos/products-test-automation/dev/tric" && export PATH="${HOME}/Repos/products-test-automation/dev:$PATH"
 
 # Deduplicate the $PATH entries.
 DEDUPED_PATH=$(n= IFS=':'; for e in $PATH; do [[ :$n == *:$e:* ]] || n+=$e:; done; echo "${n:0: -1}")
@@ -246,7 +250,13 @@ test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
 test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 
 # Mono-repo tools, install with: git clone https://github.com/shopsys/monorepo-tools ~/monorepo-tools
-test -d ~/Repos/monorepo-tools && export PATH=~/Repos/monorepo-tools:$PATH
+test -d "${HOME}/Repos/monorepo-tools" && export PATH="${HOME}/Repos/monorepo-tools:$PATH"
 
 # Activate brew bash-completions if available.
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
+# Alias `ls -la` to `l`
+alias l="ls -la"
+
+# If rg is installed and ag is not, then alias rg to ag.
+test $(type "ag" > /dev/null;) || alias ag=rg

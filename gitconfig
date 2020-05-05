@@ -15,7 +15,7 @@
 	bb = rev-parse --abbrev-ref HEAD
 [core]
     editor = vim
-	excludesfile = ~/.gitignore
+	excludesfile = /Users/lucatume/.gitignore
 [push]
 	default = simple
 [mergetool]

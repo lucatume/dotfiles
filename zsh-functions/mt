@@ -56,3 +56,38 @@ function mtnpmbuild(){
 				echo "The commmand 'nodenv shell ${node_version}' terminated with error."
 		fi
 }
+
+function mt_sync(){
+		plugins=( "the-events-calendar/common" "the-events-calendar" "events-pro" "events-filterbar" "event-tickets" "event-tickets-plus" "events-community" )
+
+		branch="${1:-master}"
+		root="$(pwd)"
+
+		if [ "${branch}" != "report" ]; then
+				for plugin in "${plugins[@]}"; do
+						echo "Checking out ${branch} on ${plugin}"
+						cd "${root}/${plugin}" || echo "Could not cd to ${plugin}; does it exist?"
+						git stash save --include-untracked "Update Stash"
+						git checkout "${branch}"
+						git pull
+						git submodule update --recursive --init
+						nodenv shell 8.9.4
+						npm install
+						npm run build
+						git checkout .
+				done
+		fi
+
+		cd "${root}" || (echo "Could not cd back to ${root}" && exit 1)
+
+		echo ''
+		echo 'Result:'
+		echo '======='
+
+
+		for plugin in "${plugins[@]}"; do
+				echo ''
+				cd "${root}/${plugin}" || (echo "Could not cd to ${plugin}" && exit 1)
+				echo "${plugin} status: $(git status)"
+		done
+}

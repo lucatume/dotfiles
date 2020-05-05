@@ -4,12 +4,14 @@
 function xoff() {
     # sed -i '' '/^zend_extension.*xdebug.so/ s/zend_ex/;zend_ex/g' $(sed 's/,*$//g' <<< $(php --ini | grep xdebug.ini))
     file=$(php --ini | grep xdebug.ini | grep -o '[^ ]*$')
-    sed -i '' '/^zend_extension.*xdebug.so/ s/zend_ex/;zend_ex/g' ${file}
+	file=$(echo "${file}" | sed -e 's/,*$//g')
+    sed -i '' '/^zend_extension.*xdebug.so/ s/zend_ex/;zend_ex/g' "${file}"
 }
 
 # Activates XDebug on the local PHP binary
 function xon() {
     # sed -i '' '/^;zend_extension.*xdebug.so/ s/;zend_ex/zend_ex/g' $(sed 's/,*$//g' <<< $(php --ini | grep xdebug.ini))
     file=$(php --ini | grep xdebug.ini | grep -o '[^ ]*$')
-    sed -i '' '/^;zend_extension.*xdebug.so/ s/;zend_ex/zend_ex/g' ${file}
+	file=$(echo "${file}" | sed -e 's/,*$//g')
+    sed -i '' '/^;zend_extension.*xdebug.so/ s/;zend_ex/zend_ex/g' "${file}"
 }

@@ -86,6 +86,7 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		Plugin 'herrbischoff/cobalt2.vim'
 		Plugin 'gertjanreynaert/cobalt2-vim-theme'
 		Plugin 'scrooloose/syntastic'
+		Plugin 'tpope/vim-commentary'
 
 		" All of your Plugins must be added before the following line
 		call vundle#end()            " required
@@ -107,7 +108,7 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		"
 		" Or the solarized one.
 		" https://github.com/ericbn/vim-solarized
-		colorscheme cobalt2
+		colorscheme solarized8
 		set background=dark
 		set termguicolors
 	

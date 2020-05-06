@@ -1,17 +1,22 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
+
+# Returns the full path to the current PHP binary XDebug configuration file.
+function xdebug_config_file() {
+    file=$(php --ini | grep xdebug.ini | grep -o '[^ ]*$')
+	file=$(echo "${file}" | sed -e 's/,*$//g')
+	echo "${file}"
+}
 
 # Deactivates XDebug on the local PHP binary
 function xoff() {
-    # sed -i '' '/^zend_extension.*xdebug.so/ s/zend_ex/;zend_ex/g' $(sed 's/,*$//g' <<< $(php --ini | grep xdebug.ini))
-    file=$(php --ini | grep xdebug.ini | grep -o '[^ ]*$')
-	file=$(echo "${file}" | sed -e 's/,*$//g')
-    sed -i '' '/^zend_extension.*xdebug.so/ s/zend_ex/;zend_ex/g' "${file}"
+	file=$(xdebug_config_file)
+    sed -i.bak '/^zend_extension.*xdebug.so/ s/zend_ex/;zend_ex/g' "${file}"
+	echo "Updated XDebug config file: ${file}"
 }
 
 # Activates XDebug on the local PHP binary
 function xon() {
-    # sed -i '' '/^;zend_extension.*xdebug.so/ s/;zend_ex/zend_ex/g' $(sed 's/,*$//g' <<< $(php --ini | grep xdebug.ini))
-    file=$(php --ini | grep xdebug.ini | grep -o '[^ ]*$')
-	file=$(echo "${file}" | sed -e 's/,*$//g')
-    sed -i '' '/^;zend_extension.*xdebug.so/ s/;zend_ex/zend_ex/g' "${file}"
+	file=$(xdebug_config_file)
+    sed -i.bak '/^;zend_extension.*xdebug.so/ s/;zend_ex/zend_ex/g' "${file}"
+	echo "Updated XDebug config file: ${file}"
 }

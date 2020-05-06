@@ -91,3 +91,6 @@ function mt_sync(){
 				echo "${plugin} status: $(git status)"
 		done
 }
+
+# If available add tric to the path.
+test -d "${HOME}/Repos/products-test-automation/dev" && export PATH="${HOME}/Repos/products-test-automation/dev":"$PATH"

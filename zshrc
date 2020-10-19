@@ -6,9 +6,10 @@ export ZSH=~/.oh-my-zsh
 
 # Theme
 # =====
-# Install powerlevel9k: git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+# Install powerlevel10k: git clone https://github.com/bhilburn/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
 # (see https://github.com/bhilburn/powerlevel9k/wiki/Install-Instructions#step-1-install-powerlevel9k)
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME="minimal"
 # These settings apply to the powerlevel9k zsh theme.
 POWERLEVEL9K_DISABLE_RPROMPT=true
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
@@ -235,9 +236,6 @@ fi
 # Added by travis gem.	
 [ -f /Users/lucatume/.travis/travis.sh ] && source /Users/lucatume/.travis/travis.sh
 
-# If Modern Tribe `tric` is available, then add it to PATH.
-test -f "${HOME}/Repos/products-test-automation/dev/tric" && export PATH="${HOME}/Repos/products-test-automation/dev:$PATH"
-
 # Deduplicate the $PATH entries.
 DEDUPED_PATH=$(n= IFS=':'; for e in $PATH; do [[ :$n == *:$e:* ]] || n+=$e:; done; echo "${n:0: -1}")
 export PATH=$DEDUPED_PATH
@@ -260,3 +258,10 @@ alias l="ls -la"
 
 # If rg is installed and ag is not, then alias rg to ag.
 test $(type "ag" > /dev/null;) || alias ag=rg
+
+# Create an alias to run f(ull) nektos/act if installed.
+# see https://github.com/nektos/act
+alias fact="act -P ubuntu-latest=nektos/act-environments-ubuntu:18.04"
+
+# Start the SSH Agent.
+eval "$(ssh-agent -s)"

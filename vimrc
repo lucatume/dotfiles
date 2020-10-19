@@ -1,7 +1,6 @@
 " Start here and clone Vundle, then run :PluginInstall
 command InstallVundle !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
-
 " I've never used vi once in my life, before my time; it's ok to drop compatibility.
 set nocompatible
 
@@ -87,6 +86,9 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		Plugin 'gertjanreynaert/cobalt2-vim-theme'
 		Plugin 'scrooloose/syntastic'
 		Plugin 'tpope/vim-commentary'
+		Plugin 'morhetz/gruvbox'
+		Plugin 'tomtom/ttodo_vim'
+		Plugin 'craigemery/vim-autotag'
 
 		" All of your Plugins must be added before the following line
 		call vundle#end()            " required
@@ -108,8 +110,15 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		"
 		" Or the solarized one.
 		" https://github.com/ericbn/vim-solarized
-		colorscheme solarized8
-		set background=dark
+		
+		" morhetz/gruvbox specific settings	
+		" See https://github.com/morhetz/gruvbox/wiki/Configuration#ggruvbox_contrast_darkj:w
+		let g:gruvbox_contrast_light = "light"
+		let g:gruvbox_contrast_dark = "light"
+        let g:gruvbox_termcolors = 256
+
+		colorscheme cobalt2
+		set background=light
 		set termguicolors
 	
 		" Set up some reasonable defaults for syntastic.
@@ -122,5 +131,35 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		let g:syntastic_check_on_open = 1
 		let g:syntastic_check_on_wq = 0
 		let g:syntastic_auto_jump = 1
+endif
+
+" Commands to manage and interact with todo.txt/taskpaper format files.
+command Done s/^\(\t\+\)-/\1+/g | s/$/ @done/g
+command Undone s/^\(\t\+\)+/\1-/g | s/\s*@done//g
+
+" Find the configuration file for a sniffer/linter.
+" Note: the `prefix` must contain required spaces, e.g. `-c ` for jscs.
+function! FindCheckerConfig(prefix, what, where)
+		let cfg = findfile(a:what, escape(a:where, '') . ';')
+		return cfg !=# '' ? ' ' . a:prefix . shellescape(cfg) : ''
+endfunction		
+
+autocmd FileType php let b:syntastic_php_phpcs_args = 
+	\ get(g:, 'syntastic_php_phpcs_args', '') .
+	\ FindCheckerConfig('-s --standard=', 'phpcs.xml', expand('<afile>:p:h', 1))
+
+" let g:syntastic_php_checkers = ["php", "phpcs", "phpmd"]
+let g:syntastic_php_checkers = ["php", "phpcs"]
+
+" Allow per-project configuration files.
+set exrc
+" But make sure we're not running unsafe commands from those files.
+set secure
+
+" If the dracula_pro theme is installed, then install it.
+if isdirectory(expand('~/.vim/pack/themes/start/dracula_pro'))
+		packadd! dracula_pro
+		let g:dracula_colorterm = 0
+		colorscheme dracula_pro_blade
 endif
 

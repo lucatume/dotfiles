@@ -295,6 +295,19 @@ function mip(){
 complete -F _repo_completions repo-link
 complete -F _repo_completions repo-sync
 
-function rand_string(){
-		cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
+# Starts a PlantUML Docker container on port 9988.
+function plantuml(){
+		if [ -n "$1" ] && [ "$1" = "stop" ]; then
+				printf "\nStopping PlantUML container...\n"
+				docker stop plantuml
+		else
+				docker run -d -p 9988:8080 --name plantuml plantuml/plantuml-server:jetty
+				printf "\nPlantUML server running at http://localhost:9988\n"
+		fi
+}
+
+# Clears the current PHP error log and starts following it.
+function plog(){
+		echo '' > "$(php -i | grep ^error_log | cut -f3 -d ' ')"
+		tail -f "$(php -i | grep ^error_log | cut -f3 -d ' ')"
 }

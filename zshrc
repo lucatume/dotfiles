@@ -265,3 +265,7 @@ alias fact="act -P ubuntu-latest=nektos/act-environments-ubuntu:18.04"
 
 # Start the SSH Agent.
 eval "$(ssh-agent -s)"
+
+# Alias THT if availalbe.
+THT_INSTALL_DIR=~/.tht
+[ -d "${THT_INSTALL_DIR}" ] && alias tht="php $THT_INSTALL_DIR/main/Tht.php"

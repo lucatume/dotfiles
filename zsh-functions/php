@@ -11,12 +11,14 @@ function xdebug_config_file() {
 function xoff() {
 	file=$(xdebug_config_file)
     sed -i.bak '/^zend_extension.*xdebug.so/ s/zend_ex/;zend_ex/g' "${file}"
-	echo "Updated XDebug config file: ${file}"
+	echo -e "\e[31mXDebug Off\e[0m - Updated XDebug config file: ${file}"
+	php -v
 }
 
 # Activates XDebug on the local PHP binary
 function xon() {
 	file=$(xdebug_config_file)
     sed -i.bak '/^;zend_extension.*xdebug.so/ s/;zend_ex/zend_ex/g' "${file}"
-	echo "Updated XDebug config file: ${file}"
+	echo -e "\e[32mXDebug On\e[0m - Updated XDebug config file: ${file}"
+	php -v
 }

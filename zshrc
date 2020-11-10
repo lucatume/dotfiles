@@ -167,7 +167,9 @@ alias zvim="vim ~/.zshrc"
 # Clear the screen.
 alias kk="clear"
 # Alias 'hub' to 'git'.
-eval "$(hub alias -s)"
+if type hub &>/dev/null; then
+  eval "$(hub alias -s)"
+fi
 
 # Function files
 # ==============

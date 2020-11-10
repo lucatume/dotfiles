@@ -22,6 +22,9 @@ link:
 	$(call backup_file,~/.vimrc)
 	ln -s ${PWD}/vimrc ~/.vimrc
 	ls -la ~/.vimrc
+	$(call backup_file,~/.ideavimrc)
+	ln -s ${PWD}/vimrc ~/.ideavimrc
+	ls -la ~/.ideavimrc
 	$(call backup_file,~/.zshrc)
 	ln -s ${PWD}/zshrc ~/.zshrc
 	ls -la ~/.zshrc

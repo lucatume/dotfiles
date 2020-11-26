@@ -163,3 +163,6 @@ if isdirectory(expand('~/.vim/pack/themes/start/dracula_pro'))
 		colorscheme dracula_pro_blade
 endif
 
+" Set up GUI versions of vim
+set linespace=16
+set guifont=Monaco:h15

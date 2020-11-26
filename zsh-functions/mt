@@ -94,3 +94,6 @@ function mt_sync(){
 
 # If available add tric to the path.
 test -d "${HOME}/Repos/tric" && export PATH="${HOME}/Repos/tric":"$PATH"
+
+# If available, add tut to the path.
+test -d "${HOME}/Repos/tut" && export PATH="${HOME}/Repos/tut":"$PATH"

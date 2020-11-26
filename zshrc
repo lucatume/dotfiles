@@ -8,11 +8,12 @@ export ZSH=~/.oh-my-zsh
 # =====
 # Install powerlevel10k: git clone https://github.com/bhilburn/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
 # (see https://github.com/bhilburn/powerlevel9k/wiki/Install-Instructions#step-1-install-powerlevel9k)
+# =======
 # ZSH_THEME="powerlevel10k/powerlevel10k"
 ZSH_THEME="minimal"
 # These settings apply to the powerlevel9k zsh theme.
-POWERLEVEL9K_DISABLE_RPROMPT=true
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
+# POWERLEVEL9K_DISABLE_RPROMPT=true
+# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
 # POWERLEVEL9K_DIR_FOREGROUND=''
 # POWERLEVEL9K_DIR_BACKGROUND=''
 # POWERLEVEL9K_VCS_FOREGROUND=''
@@ -166,7 +167,9 @@ alias zvim="vim ~/.zshrc"
 # Clear the screen.
 alias kk="clear"
 # Alias 'hub' to 'git'.
-eval "$(hub alias -s)"
+if type hub &>/dev/null; then
+  eval "$(hub alias -s)"
+fi
 
 # Function files
 # ==============

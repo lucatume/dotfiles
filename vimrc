@@ -117,8 +117,8 @@ if isdirectory(expand('~/.vim/bundle/Vundle.vim'))
 		let g:gruvbox_contrast_dark = "light"
         let g:gruvbox_termcolors = 256
 
-		colorscheme cobalt2
-		set background=light
+		colorscheme gruvbox 
+		set background=dark
 		set termguicolors
 	
 		" Set up some reasonable defaults for syntastic.

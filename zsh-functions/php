@@ -11,7 +11,7 @@ function xdebug_config_file() {
 function xoff() {
 	file=$(xdebug_config_file)
     sed -i.bak '/^zend_extension.*xdebug.so/ s/zend_ex/;zend_ex/g' "${file}"
-	echo -e "\e[31mXDebug Off\e[0m - Updated XDebug config file: ${file}"
+	echo "\e[31mXDebug OFF\e[0m"
 	php -v
 }
 
@@ -19,6 +19,6 @@ function xoff() {
 function xon() {
 	file=$(xdebug_config_file)
     sed -i.bak '/^;zend_extension.*xdebug.so/ s/;zend_ex/zend_ex/g' "${file}"
-	echo -e "\e[32mXDebug On\e[0m - Updated XDebug config file: ${file}"
+	echo "\e[32mXDebug ON\e[0m"
 	php -v
 }

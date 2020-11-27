@@ -83,6 +83,8 @@ for binPath in ${binPaths}; do
     fi
 done
 
+[ -f "${HOME}/linuxbrew/.linuxbrew/bin/brew" ] && eval $("${HOME}/linuxbrew/.linuxbrew/bin/brew" shellenv)
+
 # Add the relative paths.
 relativeBinPaths=(
 	"." # The current folder.
@@ -125,6 +127,10 @@ if [ -d ${HOME}/.oh-my-zsh/custom/plugin/git-it-on ]; then
 fi
 # Load oh-my-zsh.
 source $ZSH/oh-my-zsh.sh
+
+# Change the prompt on SSH connection.
+[ -n "${SSH_CONNECTION}" ] && PROMPT_PREFIX='(MSL) '
+PROMPT="${PROMPT_PREFIX:-}${PROMPT}"
 
 # Reload completions after oh-my-zsh loaded.
 autoload bashcompinit
@@ -272,3 +278,13 @@ eval "$(ssh-agent -s)"
 # Alias THT if availalbe.
 THT_INSTALL_DIR=~/.tht
 [ -d "${THT_INSTALL_DIR}" ] && alias tht="php $THT_INSTALL_DIR/main/Tht.php"
+
+# Set some environment variables depending on this being an ssh connection.
+if [ -n "${SSH_CONNECTION}" ]; then
+		ssh_connection_ip_address="$(echo "${SSH_CONNECTION}" | cut -d' ' -f 1)"
+		# Export some env vars that chould be used to setup services.
+		export HOST_IP_ADDRESS="${ssh_connection_ip_address}"
+		export TRIC_HOST="${ssh_connection_ip_address}"
+		export XDH="${ssh_connection_ip_address}"
+		export XDEBUG_REMOTE_HOST="${ssh_connection_ip_address}"
+fi

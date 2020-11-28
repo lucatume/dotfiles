@@ -128,9 +128,9 @@ fi
 # Load oh-my-zsh.
 source $ZSH/oh-my-zsh.sh
 
-# Change the prompt on SSH connection.
-[ -n "${SSH_CONNECTION}" ] && PROMPT_PREFIX='(MSL) '
-PROMPT="${PROMPT_PREFIX:-}${PROMPT}"
+# Change the prompt on SSH connection prefixing it.
+[ -n "${SSH_CONNECTION}" ] && PROMPT_PREFIX='%{$fg[red]%}nix%{$reset_color%} '
+PROMPT="${PROMPT_PREFIX}${PROMPT}"
 
 # Reload completions after oh-my-zsh loaded.
 autoload bashcompinit

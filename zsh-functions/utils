@@ -314,7 +314,7 @@ function plog(){
 
 # Echoes the Parallels Host IP address from the Hosts.
 function dom_host(){
-	echo "$(ifconfig vnic0 | grep inet | cut -d' ' -f2)"
+	ifconfig vnic0 | grep inet | cut -d' ' -f2
 }
 
 # Start the Linux VM and ssh into it.
@@ -333,6 +333,18 @@ function nix(){
 	vm_ip_address="$(prlctl exec "${vm_name}" ifconfig "${vm_inet_interface}" | grep inet | grep -o 'inet \d\{1,3\}\.\d\{1,3\}\.\d\{1,3\}\.\d\{1,3\}' | cut -d' ' -f2)"
 
 	[[ "$(prlctl status "${vm_name}")" =~ 'running' ]] || prlctl start "${vm_name}"
-	export TEST_VAR="test_var"
 	ssh "${vm_user}"@"${vm_ip_address}"
+}
+
+# Start Docker-machine and export some vars related to it.
+# Usage: plm <parallels_machine_name>
+function plm(){
+		machine_name="${1:-pll-dev}"
+		docker-machine start "${machine_name}"
+		eval "$(docker-machine env pll-dev)"
+		host_ip_address="$(ifconfig vnic1 | grep inet | cut -d' ' -f2)"
+		export HOST_IP_ADDRESS="${host_ip_address}"
+		export TRIC_HOST="${host_ip_address}"
+		export XDH="${host_ip_address}"
+		export XDEBUG_REMOTE_HOST="${host_ip_address}"
 }
